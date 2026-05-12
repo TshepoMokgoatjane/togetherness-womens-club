@@ -72,8 +72,8 @@ public class Member {
     @NotBlank
     private LocalDateTime updatedAt;
 
-    @Column(name = "is_deleted", nullable = false)
-    private boolean is_deleted;
+    @Column(name = "deleted", nullable = false)
+    private boolean deleted;
 
     @PrePersist
     public void prePersist() {
