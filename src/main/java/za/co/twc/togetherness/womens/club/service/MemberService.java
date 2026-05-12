@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import za.co.twc.togetherness.womens.club.domain.Member;
 import za.co.twc.togetherness.womens.club.domain.MemberStatus;
+import za.co.twc.togetherness.womens.club.exception.MemberNotFoundException;
 import za.co.twc.togetherness.womens.club.repository.MemberRepository;
 
 import java.time.LocalDate;
@@ -54,7 +55,7 @@ public class MemberService {
     @Transactional(readOnly = true)
     public Member getActiveMemberById(Long id) {
         return memberRepository.findByIdAndDeletedFalse(id)
-                .orElseThrow(() -> new RuntimeException("Member not found or has been deleted"));
+                .orElseThrow(() -> new MemberNotFoundException(id));
     }
 
 
