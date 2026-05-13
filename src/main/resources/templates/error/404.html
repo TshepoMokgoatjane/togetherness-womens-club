@@ -11,6 +11,8 @@
 <div class="container mt-5 text-center">
     <h1 class="display-4 text-danger">404</h1>
     <p class="lead" th:text="${errorMessage}">Resource not found</p>
+    <p class="text-muted">It might have been removed, or you may not have permission to view it.</p>
+    <p class="text-muted">Please check with the administrators for further assistance.</p>
     <a th:href="@{/members}" class="btn btn-primary mt-3">Back to Members</a>
 </div>
 
