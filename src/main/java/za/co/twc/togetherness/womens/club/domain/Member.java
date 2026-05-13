@@ -2,6 +2,7 @@ package za.co.twc.togetherness.womens.club.domain;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -40,36 +41,33 @@ public class Member {
     @NotBlank
     private String email;
 
-    @Column(name = "physical_address", nullable = false, unique = true, length = 250)
+    @Column(name = "physical_address", nullable = false, length = 250)
     private String physicalAddress;
 
     @Column(name = "phone_number", nullable = false, unique = true, length = 10)
     @NotBlank
     private String phoneNumber;
 
-    @Column(name = "alternative_phone_number", unique = true, nullable = false, length = 10)
-    @NotBlank
+    @Column(name = "alternative_phone_number", unique = true, length = 10)
     private String alternativePhoneNumber;
 
     @Column(name = "birth_date", nullable = false)
-    @NotBlank
+    @NotNull
     private LocalDate birthDate;
 
     @Column(name = "date_joined", nullable = false)
-    @NotBlank
+    @NotNull
     private LocalDate joinDate;
 
     @Column(name = "member_status", nullable = false)
     @Enumerated(EnumType.STRING)
-    @NotBlank
+    @NotNull
     private MemberStatus status = MemberStatus.ACTIVE;
 
     @Column(name = "created_at", nullable = false, updatable = false)
-    @NotBlank
     private LocalDateTime createdAt;
 
     @Column(name = "updated_at", nullable = false)
-    @NotBlank
     private LocalDateTime updatedAt;
 
     @Column(name = "deleted", nullable = false)

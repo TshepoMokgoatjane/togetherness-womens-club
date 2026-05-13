@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Member Details</title>
+    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}" />
+</head>
+<body>
+
+<div class="container mt-4">
+    <h2>Member Details</h2>
+
+    <div class="card mt-3">
+        <div class="card-body">
+            <dl class="row">
+                <dt class="col-sm-3">Member Number</dt>
+                <dd class="col-sm-9" th:text="${member.memberNumber}"></dd>
+
+                <dt class="col-sm-3">First Name</dt>
+                <dd class="col-sm-9" th:text="${member.firstName}"></dd>
+
+                <dt class="col-sm-3">Last Name</dt>
+                <dd class="col-sm-9" th:text="${member.lastName}"></dd>
+
+                <dt class="col-sm-3">ID Number</dt>
+                <dd class="col-sm-9" th:text="${member.idNumber}"></dd>
+
+                <dt class="col-sm-3">Email</dt>
+                <dd class="col-sm-9" th:text="${member.email}"></dd>
+
+                <dt class="col-sm-3">Phone Number</dt>
+                <dd class="col-sm-9" th:text="${member.phoneNumber}"></dd>
+
+                <dt class="col-sm-3">Alternative Phone</dt>
+                <dd class="col-sm-9" th:text="${member.alternativePhoneNumber}"></dd>
+
+                <dt class="col-sm-3">Date of Birth</dt>
+                <dd class="col-sm-9" th:text="${member.birthDate}"></dd>
+
+                <dt class="col-sm-3">Date Joined</dt>
+                <dd class="col-sm-9" th:text="${member.joinDate}"></dd>
+
+                <dt class="col-sm-3">Physical Address</dt>
+                <dd class="col-sm-9" th:text="${member.physicalAddress}"></dd>
+
+                <dt class="col-sm-3">Status</dt>
+                <dd class="col-sm-9" th:text="${member.status}"></dd>
+            </dl>
+        </div>
+    </div>
+
+    <div class="mt-3">
+        <a th:href="@{/members/{id}/edit(id=${member.id})}" class="btn btn-primary">Edit</a>
+        <a th:href="@{/members}" class="btn btn-secondary">Back to List</a>
+    </div>
+</div>
+
+</body>
+</html>

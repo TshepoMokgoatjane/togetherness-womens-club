@@ -60,7 +60,7 @@ public class MemberController {
     // ==================
     // UPDATE
     // ==================
-    @GetMapping("/{id}/update")
+    @GetMapping("/{id}/edit")
     public String showUpdateForm(@PathVariable Long id, Model model) {
         model.addAttribute("member", memberService.getActiveMemberById(id));
         return "member/form";

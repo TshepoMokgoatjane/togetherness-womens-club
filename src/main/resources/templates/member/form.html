@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Member Form</title>
+    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}" />
+</head>
+<body>
+
+<div class="container mt-4">
+    <h2 th:text="${member.id != null} ? 'Edit Member' : 'Add New Member'">Member Form</h2>
+
+    <form th:action="${member.id != null} ? @{/members/{id}(id=${member.id})} : @{/members}"
+          th:object="${member}"
+          method="post"
+          class="mt-3">
+
+        <div class="row mb-3">
+            <div class="col-md-6">
+                <label for="memberNumber" class="form-label">Member Number</label>
+                <input type="text" class="form-control" id="memberNumber"
+                       th:field="*{memberNumber}" />
+                <div class="text-danger" th:if="${#fields.hasErrors('memberNumber')}"
+                     th:errors="*{memberNumber}"></div>
+            </div>
+        </div>
+
+        <div class="row mb-3">
+            <div class="col-md-6">
+                <label for="firstName" class="form-label">First Name</label>
+                <input type="text" class="form-control" id="firstName"
+                       th:field="*{firstName}" />
+                <div class="text-danger" th:if="${#fields.hasErrors('firstName')}"
+                     th:errors="*{firstName}"></div>
+            </div>
+            <div class="col-md-6">
+                <label for="lastName" class="form-label">Last Name</label>
+                <input type="text" class="form-control" id="lastName"
+                       th:field="*{lastName}" />
+                <div class="text-danger" th:if="${#fields.hasErrors('lastName')}"
+                     th:errors="*{lastName}"></div>
+            </div>
+        </div>
+
+        <div class="row mb-3">
+            <div class="col-md-6">
+                <label for="idNumber" class="form-label">ID Number</label>
+                <input type="text" class="form-control" id="idNumber"
+                       th:field="*{idNumber}" maxlength="13" />
+                <div class="text-danger" th:if="${#fields.hasErrors('idNumber')}"
+                     th:errors="*{idNumber}"></div>
+            </div>
+            <div class="col-md-6">
+                <label for="email" class="form-label">Email</label>
+                <input type="email" class="form-control" id="email"
+                       th:field="*{email}" />
+                <div class="text-danger" th:if="${#fields.hasErrors('email')}"
+                     th:errors="*{email}"></div>
+            </div>
+        </div>
+
+        <div class="row mb-3">
+            <div class="col-md-6">
+                <label for="phoneNumber" class="form-label">Phone Number</label>
+                <input type="text" class="form-control" id="phoneNumber"
+                       th:field="*{phoneNumber}" maxlength="10" />
+                <div class="text-danger" th:if="${#fields.hasErrors('phoneNumber')}"
+                     th:errors="*{phoneNumber}"></div>
+            </div>
+            <div class="col-md-6">
+                <label for="alternativePhoneNumber" class="form-label">Alternative Phone</label>
+                <input type="text" class="form-control" id="alternativePhoneNumber"
+                       th:field="*{alternativePhoneNumber}" maxlength="10" />
+            </div>
+        </div>
+
+        <div class="row mb-3">
+            <div class="col-md-6">
+                <label for="birthDate" class="form-label">Date of Birth</label>
+                <input type="date" class="form-control" id="birthDate"
+                       th:field="*{birthDate}" />
+                <div class="text-danger" th:if="${#fields.hasErrors('birthDate')}"
+                     th:errors="*{birthDate}"></div>
+            </div>
+            <div class="col-md-6">
+                <label for="joinDate" class="form-label">Date Joined</label>
+                <input type="date" class="form-control" id="joinDate"
+                       th:field="*{joinDate}" />
+                <div class="text-danger" th:if="${#fields.hasErrors('joinDate')}"
+                     th:errors="*{joinDate}"></div>
+            </div>
+        </div>
+
+        <div class="row mb-3">
+            <div class="col-md-12">
+                <label for="physicalAddress" class="form-label">Physical Address</label>
+                <textarea class="form-control" id="physicalAddress"
+                          th:field="*{physicalAddress}" rows="3"></textarea>
+            </div>
+        </div>
+
+        <div class="mt-3">
+            <button type="submit" class="btn btn-success">Save</button>
+            <a th:href="@{/members}" class="btn btn-secondary">Cancel</a>
+        </div>
+    </form>
+</div>
+
+</body>
+</html>
