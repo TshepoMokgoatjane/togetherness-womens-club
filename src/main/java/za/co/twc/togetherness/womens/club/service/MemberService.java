@@ -29,7 +29,11 @@ public class MemberService {
     // ==================
     // CREATE
     // ==================
-    public Member createMember(Member member) {
+    public void createMember(Member member) {
+
+        String nextMemberNumber = generateMemberNumber();
+
+        member.setMemberNumber(nextMemberNumber);
         member.setStatus(MemberStatus.ACTIVE);
         member.setDeleted(false);
 
@@ -40,8 +44,13 @@ public class MemberService {
         Member savedMember = memberRepository.save(member);
 
         LOGGER.info("Member created: memberNumber={}, status={}", savedMember.getMemberNumber(), savedMember.getStatus());
+    }
 
-        return savedMember;
+    // Generate Main Member Number
+    private String generateMemberNumber() {
+        Long maxId = memberRepository.findMaxId();
+        Long nextNumber = (maxId == null) ? 1 : maxId + 1;
+        return String.format("MWC-%06d", nextNumber);
     }
 
     // ==================

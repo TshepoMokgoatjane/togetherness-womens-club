@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dependents</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+          rel="stylesheet"
+          integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YcnS/NPl2m6O2klTlmCjA0y6GBg/CHKM4li"
+          crossorigin="anonymous" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
+          rel="stylesheet" />
+</head>
+<body>
+
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-4">
+    <div class="container">
+        <a class="navbar-brand" th:href="@{/members}">
+            <i class="bi bi-people-fill me-2"></i>Togetherness Women's Club
+        </a>
+    </div>
+</nav>
+
+<div class="container">
+    <h2>
+        <i class="bi bi-people me-2"></i>Dependents for
+        <span th:text="${member.firstName + ' ' + member.lastName}"></span>
+    </h2>
+
+    <div th:if="${successMessage}" class="alert alert-success alert-dismissible fade show mt-3" role="alert">
+        <span th:text="${successMessage}"></span>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+
+    <div class="d-flex justify-content-between align-items-center mt-3 mb-3">
+        <a th:href="@{/members/{id}/dependents/new(id=${member.id})}" class="btn btn-success">
+            <i class="bi bi-person-plus me-1"></i>Add Dependent
+        </a>
+        <a th:href="@{/members/{id}(id=${member.id})}" class="btn btn-secondary">
+            <i class="bi bi-arrow-left me-1"></i>Back to Member
+        </a>
+    </div>
+
+    <div class="table-responsive">
+        <table class="table table-striped table-hover table-bordered">
+            <thead class="table-dark">
+                <tr>
+                    <th>First Name</th>
+                    <th>Last Name</th>
+                    <th>ID Number</th>
+                    <th>Relationship</th>
+                    <th>Birth Date</th>
+                    <th style="width: 100px">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="dependent : ${dependents}">
+                    <td th:text="${dependent.firstName}"></td>
+                    <td th:text="${dependent.lastName}"></td>
+                    <td th:text="${dependent.idNumber}"></td>
+                    <td th:text="${dependent.relationship}"></td>
+                    <td th:text="${dependent.birthDate}"></td>
+                    <td>
+                        <form th:action="@{/members/{memberId}/dependents/{depId}/delete(memberId=${member.id}, depId=${dependent.id})}"
+                              method="post" style="display:inline;"
+                              onsubmit="return confirm('Are you sure you want to remove this dependent?');">
+                            <button type="submit" class="btn btn-sm btn-danger" title="Delete">
+                                <i class="bi bi-trash"></i>
+                            </button>
+                        </form>
+                    </td>
+                </tr>
+                <tr th:if="${#lists.isEmpty(dependents)}">
+                    <td colspan="6" class="text-center text-muted py-4">
+                        <i class="bi bi-inbox fs-3 d-block mb-2"></i>
+                        No dependents found
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+        crossorigin="anonymous"></script>
+</body>
+</html>

@@ -5,8 +5,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import za.co.twc.togetherness.womens.club.domain.Member;
 import za.co.twc.togetherness.womens.club.exception.MemberNotFoundException;
+import za.co.twc.togetherness.womens.club.service.DependentService;
 import za.co.twc.togetherness.womens.club.service.MemberService;
 
 @Controller
@@ -14,9 +16,11 @@ import za.co.twc.togetherness.womens.club.service.MemberService;
 public class MemberController {
 
     private final MemberService memberService;
+    private final DependentService dependentService;
 
-    public MemberController(MemberService memberService) {
+    public MemberController(MemberService memberService, DependentService dependentService) {
         this.memberService = memberService;
+        this.dependentService = dependentService;
     }
 
     // ==================
@@ -38,13 +42,18 @@ public class MemberController {
     }
 
     @PostMapping
-    public String createMember(@Valid @ModelAttribute("member") Member member, BindingResult result) {
+    public String createMember(@Valid @ModelAttribute("member") Member member,
+                               BindingResult result,
+                               RedirectAttributes redirectAttributes) {
 
         if (result.hasErrors()) {
             return "member/form";
         }
 
         memberService.createMember(member);
+
+        redirectAttributes.addFlashAttribute("successMessage", "Member created successfully!");
+
         return "redirect:/members";
     }
 
@@ -54,6 +63,7 @@ public class MemberController {
     @GetMapping("/{id}")
     public String viewMember(@PathVariable Long id, Model model) {
         model.addAttribute("member", memberService.getActiveMemberById(id));
+        model.addAttribute("dependents", dependentService.getDependentsByMemberId(id));
         return "member/view";
     }
 
@@ -67,13 +77,19 @@ public class MemberController {
     }
 
     @PostMapping("/{id}")
-    public String updateMember(@PathVariable Long id, @Valid @ModelAttribute("member") Member member, BindingResult result) {
+    public String updateMember(@PathVariable Long id,
+                               @Valid @ModelAttribute("member") Member member,
+                               BindingResult result,
+                               RedirectAttributes redirectAttributes) {
 
         if (result.hasErrors()) {
             return "member/form";
         }
 
         memberService.updateMember(id, member);
+
+        redirectAttributes.addFlashAttribute("successMessage", "Member updated successfully!");
+
         return "redirect:/members";
     }
 
@@ -81,8 +97,9 @@ public class MemberController {
     // DELETE (SOFT)
     // ==================
     @PostMapping("/{id}/delete")
-    public String deleteMember(@PathVariable Long id) {
+    public String deleteMember(@PathVariable Long id, RedirectAttributes redirectAttributes) {
         memberService.softDeleteMember(id);
+        redirectAttributes.addFlashAttribute("successMessage", "Member deleted successfully!");
         return "redirect:/members";
     }
 

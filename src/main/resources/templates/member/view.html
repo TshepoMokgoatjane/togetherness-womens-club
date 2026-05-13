@@ -4,16 +4,29 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Member Details</title>
-    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+          rel="stylesheet"
+          integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YcnS/NPl2m6O2klTlmCjA0y6GBg/CHKM4li"
+          crossorigin="anonymous" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
+          rel="stylesheet" />
 </head>
 <body>
 
-<div class="container mt-4">
-    <h2>Member Details</h2>
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-4">
+    <div class="container">
+        <a class="navbar-brand" th:href="@{/members}">
+            <i class="bi bi-people-fill me-2"></i>Togetherness Women's Club
+        </a>
+    </div>
+</nav>
+
+<div class="container">
+    <h2><i class="bi bi-person-lines-fill me-2"></i>Member Details</h2>
 
     <div class="card mt-3">
         <div class="card-body">
-            <dl class="row">
+            <dl class="row mb-0">
                 <dt class="col-sm-3">Member Number</dt>
                 <dd class="col-sm-9" th:text="${member.memberNumber}"></dd>
 
@@ -45,16 +58,70 @@
                 <dd class="col-sm-9" th:text="${member.physicalAddress}"></dd>
 
                 <dt class="col-sm-3">Status</dt>
-                <dd class="col-sm-9" th:text="${member.status}"></dd>
+                <dd class="col-sm-9">
+                    <span class="badge"
+                          th:classappend="${member.status.name() == 'ACTIVE'} ? 'bg-success' :
+                                          (${member.status.name() == 'INACTIVE'} ? 'bg-secondary' :
+                                          (${member.status.name() == 'SUSPENDED'} ? 'bg-warning text-dark' : 'bg-dark'))"
+                          th:text="${member.status}"></span>
+                </dd>
             </dl>
         </div>
     </div>
 
+    <h4 class="mt-4"><i class="bi bi-people me-2"></i>Dependents</h4>
+
+    <a th:href="@{/members/{id}/dependents/new(id=${member.id})}"
+       class="btn btn-success btn-sm mb-2">
+        <i class="bi bi-person-plus me-1"></i>Add Dependent
+    </a>
+
+    <div class="table-responsive">
+        <table class="table table-striped table-bordered">
+            <thead class="table-dark">
+                <tr>
+                    <th>Name</th>
+                    <th>Relationship</th>
+                    <th>Birth Date</th>
+                    <th style="width: 100px">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="dependent : ${dependents}">
+                    <td th:text="${dependent.firstName + ' ' + dependent.lastName}"></td>
+                    <td th:text="${dependent.relationship}"></td>
+                    <td th:text="${dependent.birthDate}"></td>
+                    <td>
+                        <form th:action="@{/members/{memberId}/dependents/{depId}/delete(memberId=${member.id}, depId=${dependent.id})}"
+                              method="post" style="display:inline;"
+                              onsubmit="return confirm('Are you sure you want to remove this dependent?');">
+                            <button type="submit" class="btn btn-sm btn-danger" title="Delete">
+                                <i class="bi bi-trash"></i>
+                            </button>
+                        </form>
+                    </td>
+                </tr>
+                <tr th:if="${#lists.isEmpty(dependents)}">
+                    <td colspan="4" class="text-center text-muted py-3">
+                        No dependents found
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
     <div class="mt-3">
-        <a th:href="@{/members/{id}/edit(id=${member.id})}" class="btn btn-primary">Edit</a>
-        <a th:href="@{/members}" class="btn btn-secondary">Back to List</a>
+        <a th:href="@{/members/{id}/edit(id=${member.id})}" class="btn btn-success">
+            <i class="bi bi-pencil me-1"></i>Edit
+        </a>
+        <a th:href="@{/members}" class="btn btn-secondary ms-2">
+            <i class="bi bi-arrow-left me-1"></i>Back to List
+        </a>
     </div>
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+        crossorigin="anonymous"></script>
 </body>
 </html>

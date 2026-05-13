@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.Set;
 
 @Data
 @NoArgsConstructor
@@ -72,6 +73,9 @@ public class Member {
 
     @Column(name = "deleted", nullable = false)
     private boolean deleted;
+
+    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<Dependent> dependents;
 
     @PrePersist
     public void prePersist() {
