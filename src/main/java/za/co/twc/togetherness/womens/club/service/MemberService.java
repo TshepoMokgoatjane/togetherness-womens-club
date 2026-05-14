@@ -3,6 +3,7 @@ package za.co.twc.togetherness.womens.club.service;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import za.co.twc.togetherness.womens.club.domain.Dependent;
@@ -26,7 +27,7 @@ public class MemberService {
     private final DependentService dependentService;
 
     @Autowired
-    public MemberService(MemberRepository memberRepository, DependentService dependentService) {
+    public MemberService(MemberRepository memberRepository, @Lazy DependentService dependentService) {
         this.memberRepository = memberRepository;
         this.dependentService = dependentService;
     }
@@ -71,7 +72,6 @@ public class MemberService {
         return memberRepository.findByIdAndDeletedFalse(id)
                 .orElseThrow(() -> new MemberNotFoundException(id));
     }
-
 
     // ==================
     // UPDATE
