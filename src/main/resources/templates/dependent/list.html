@@ -33,7 +33,8 @@
     </div>
 
     <div class="d-flex justify-content-between align-items-center mt-3 mb-3">
-        <a th:href="@{/members/{id}/dependents/new(id=${member.id})}" class="btn btn-success">
+        <a th:href="@{/members/{id}/dependents/new(id=${member.id})}" class="btn btn-success"
+            th:if="${member.status == 'ACTIVE'}">
             <i class="bi bi-person-plus me-1"></i>Add Dependent
         </a>
         <a th:href="@{/members/{id}(id=${member.id})}" class="btn btn-secondary">

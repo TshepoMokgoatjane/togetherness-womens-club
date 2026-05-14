@@ -112,9 +112,10 @@ public class MemberService {
         List<Dependent> dependents = dependentService.getDependentsByMemberId(id);
 
         if (!dependents.isEmpty()) {
-            LOGGER.error("Attempting to delete member with id {}, because dependents exist!", id);
+            LOGGER.error("Attempting to delete member with id {}, while dependents exist!", id);
             throw new MemberHasDependentsException(id);
         }
+
         member.setDeleted(true);
         memberRepository.save(member);
 

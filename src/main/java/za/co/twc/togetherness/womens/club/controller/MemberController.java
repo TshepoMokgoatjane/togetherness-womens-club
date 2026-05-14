@@ -117,7 +117,7 @@ public class MemberController {
     // CANNOT DELETE MEMBER WITH DEPENDENTS
     // ====================================
     @ExceptionHandler(MemberHasDependentsException.class)
-    public String handleBusinessRuleException(MemberHasDependentsException ex, RedirectAttributes redirectAttributes) {
+    public String handleMemberHasDependents(MemberHasDependentsException ex, RedirectAttributes redirectAttributes) {
         redirectAttributes.addFlashAttribute("errorMessage", ex.getMessage());
         return "redirect:/members";
     }
