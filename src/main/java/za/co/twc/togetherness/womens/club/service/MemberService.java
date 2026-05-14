@@ -5,8 +5,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import za.co.twc.togetherness.womens.club.domain.Dependent;
 import za.co.twc.togetherness.womens.club.domain.Member;
 import za.co.twc.togetherness.womens.club.domain.MemberStatus;
+import za.co.twc.togetherness.womens.club.exception.MemberHasDependentsException;
 import za.co.twc.togetherness.womens.club.exception.MemberNotFoundException;
 import za.co.twc.togetherness.womens.club.repository.MemberRepository;
 
@@ -21,9 +23,12 @@ public class MemberService {
 
     private final MemberRepository memberRepository;
 
+    private final DependentService dependentService;
+
     @Autowired
-    public MemberService(MemberRepository memberRepository) {
+    public MemberService(MemberRepository memberRepository, DependentService dependentService) {
         this.memberRepository = memberRepository;
+        this.dependentService = dependentService;
     }
 
     // ==================
@@ -103,6 +108,13 @@ public class MemberService {
     // ==================
     public void softDeleteMember(Long id) {
         Member member = getActiveMemberById(id);
+
+        List<Dependent> dependents = dependentService.getDependentsByMemberId(id);
+
+        if (!dependents.isEmpty()) {
+            LOGGER.error("Attempting to delete member with id {}, because dependents exist!", id);
+            throw new MemberHasDependentsException(id);
+        }
         member.setDeleted(true);
         memberRepository.save(member);
 

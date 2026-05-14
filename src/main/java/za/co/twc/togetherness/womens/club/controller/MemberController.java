@@ -7,6 +7,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import za.co.twc.togetherness.womens.club.domain.Member;
+import za.co.twc.togetherness.womens.club.exception.MemberHasDependentsException;
 import za.co.twc.togetherness.womens.club.exception.MemberNotFoundException;
 import za.co.twc.togetherness.womens.club.service.DependentService;
 import za.co.twc.togetherness.womens.club.service.MemberService;
@@ -110,5 +111,14 @@ public class MemberController {
     public String handleMemberNotFoundException(MemberNotFoundException ex, Model model) {
         model.addAttribute("errorMessage", ex.getMessage());
         return "error/404";
+    }
+
+    // ====================================
+    // CANNOT DELETE MEMBER WITH DEPENDENTS
+    // ====================================
+    @ExceptionHandler(MemberHasDependentsException.class)
+    public String handleBusinessRuleException(MemberHasDependentsException ex, RedirectAttributes redirectAttributes) {
+        redirectAttributes.addFlashAttribute("errorMessage", ex.getMessage());
+        return "redirect:/members";
     }
 }
