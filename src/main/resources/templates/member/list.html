@@ -77,7 +77,7 @@
                         <!-- DELETE BUTTON -->
                         <button type="button" class="btn btn-sm btn-danger" title="Delete"
                                 onclick="confirmDelete(this)"
-                                th:data-name="${member.firstName} + ' ' + ${member.lastName}"
+                                th:data-name="${member.firstName + ' ' + member.lastName}"
                                 th:data-url="@{/members/{id}/delete(id=${member.id})}">
                             <i class="bi bi-trash"></i>
                         </button>
@@ -119,8 +119,12 @@
                     </button>
 
                     <form id="deleteForm" method="post">
-                        <button type="submit" class="btn btn-danger">
-                            <i class="bi bi-trash me-1"></i> Delete
+                        <button type="submit" class="btn btn-danger" id="confirmDeleteBtn">
+                            <span id="deleteBtnText">
+                                <i class="bi bi-trash me-1"></i> Delete
+                            </span>
+
+                            <span id="deleteSpinner" class="spinner-border spinner-border-sm ms-2 text-light d-none"></span>
                         </button>
                     </form>
                 </div>
@@ -148,6 +152,28 @@
         let modal = new bootstrap.Modal(document.getElementById('deleteConfirmModal'));
         modal.show();
     }
+
+    // HANDLE DELETE SUBMIT
+    let deleteForm = document.getElementById("deleteForm");
+
+    if (deleteForm) {
+        deleteForm.addEventListener("submit", function() {
+            let btn = document.getElementById("confirmDeleteBtn");
+            let spinner = document.getElementById("deleteSpinner");
+
+            // Disable button (prevent double click)
+            btn.disabled = true;
+
+            // Show spinner
+            spinner.classList.remove("d-none");
+            document.getElementById("deleteBtnText").style.opacity = "0.7";
+
+            let modalEl = document.getElementById('deleteConfirmModal');
+            let modal = bootstrap.Modal.getInstance(modalEl);
+            modal.hide();
+        })
+    }
+
 </script>
 <!-- END JS DELETE -->
 
