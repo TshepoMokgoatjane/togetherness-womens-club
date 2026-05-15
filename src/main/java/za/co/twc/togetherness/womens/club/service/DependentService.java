@@ -55,7 +55,10 @@ public class DependentService {
             Dependent existing = softDeleted.get();
             existing.setFirstName(dependent.getFirstName());
             existing.setLastName(dependent.getLastName());
-            existing.setBirthDate(dependent.getBirthDate());
+            existing.setEmail(dependent.getEmail());
+            existing.setPhoneNumber(dependent.getPhoneNumber());
+            existing.setAlternativePhoneNumber(dependent.getAlternativePhoneNumber());
+            existing.setPhysicalAddress(dependent.getPhysicalAddress());
             existing.setRelationship(dependent.getRelationship());
             existing.setMember(member);
             existing.setDeleted(false);

@@ -26,6 +26,7 @@ public class DependentController {
 
     @GetMapping
     public String showDependents(@PathVariable("memberId") Long memberId, Model model) {
+        model.addAttribute("pageTitle", "Dependents");
         model.addAttribute("member", memberService.getActiveMemberById(memberId));
         model.addAttribute("dependents", dependentService.getDependentsByMemberId(memberId));
         return "dependent/list";
@@ -33,6 +34,7 @@ public class DependentController {
 
     @GetMapping("/new")
     public String showCreateForm(@PathVariable Long memberId, Model model) {
+        model.addAttribute("pageTitle", "Add Dependent");
         model.addAttribute("member", memberService.getActiveMemberById(memberId));
         model.addAttribute("dependent", new Dependent());
         model.addAttribute("relationships", RelationshipType.values());
