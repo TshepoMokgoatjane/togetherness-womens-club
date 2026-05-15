@@ -9,13 +9,13 @@ import org.springframework.transaction.annotation.Transactional;
 import za.co.twc.togetherness.womens.club.domain.Dependent;
 import za.co.twc.togetherness.womens.club.domain.Member;
 import za.co.twc.togetherness.womens.club.domain.MemberStatus;
+import za.co.twc.togetherness.womens.club.exception.DuplicateEmailAddressException;
 import za.co.twc.togetherness.womens.club.exception.MemberDeceasedException;
-import za.co.twc.togetherness.womens.club.exception.MemberHasDependentsException;
 import za.co.twc.togetherness.womens.club.exception.MemberInactiveException;
 import za.co.twc.togetherness.womens.club.exception.MemberNotFoundException;
+import za.co.twc.togetherness.womens.club.exception.MemberHasDependentsException;
 import za.co.twc.togetherness.womens.club.repository.MemberRepository;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -56,6 +56,11 @@ public class MemberService {
     // ==================
     public void createMember(Member member) {
 
+        if (memberRepository.existsByEmail(member.getEmail())) {
+            LOGGER.warn("Email address already in use: {}", member.getEmail());
+            throw new DuplicateEmailAddressException(member.getEmail());
+        }
+
         String nextMemberNumber = generateMemberNumber();
 
         member.setMemberNumber(nextMemberNumber);
@@ -91,6 +96,12 @@ public class MemberService {
         if (memberStatus == MemberStatus.DECEASED) {
             LOGGER.warn("Attempting to update a DECEASED member with id {}", id);
             throw new MemberDeceasedException(id);
+        }
+
+        if (!existingMember.getEmail().equals(updatedMember.getEmail()) &&
+        memberRepository.existsByEmail(updatedMember.getEmail())) {
+            LOGGER.warn("Duplicate email address: {}",  updatedMember.getEmail());
+            throw new DuplicateEmailAddressException(updatedMember.getEmail());
         }
 
         // Allowed only if ACTIVE

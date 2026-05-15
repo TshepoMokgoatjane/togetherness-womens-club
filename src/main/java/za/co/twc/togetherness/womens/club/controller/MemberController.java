@@ -7,6 +7,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import za.co.twc.togetherness.womens.club.domain.Member;
+import za.co.twc.togetherness.womens.club.exception.DuplicateEmailAddressException;
 import za.co.twc.togetherness.womens.club.exception.MemberHasDependentsException;
 import za.co.twc.togetherness.womens.club.exception.MemberNotFoundException;
 import za.co.twc.togetherness.womens.club.service.DependentService;
@@ -55,9 +56,16 @@ public class MemberController {
             return "member/form";
         }
 
-        memberService.createMember(member);
+        try {
+            memberService.createMember(member);
 
-        redirectAttributes.addFlashAttribute("successMessage", "Member created successfully!");
+            redirectAttributes.addFlashAttribute("successMessage", "Member created successfully!");
+
+        } catch (DuplicateEmailAddressException ex) {
+            redirectAttributes.addFlashAttribute("errorMessage", ex.getMessage());
+            result.rejectValue("email", "error.member", ex.getMessage());
+            return "member/form";
+        }
 
         return "redirect:/members";
     }
