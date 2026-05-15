@@ -25,12 +25,12 @@
         </a>
     </div>
 
-    <div th:if="${successMessage}" class="alert alert-success alert-dismissible fade show" role="alert">
+    <div id="successAlert" th:if="${successMessage}" class="alert alert-success alert-dismissible fade show" role="alert">
         <span th:text="${successMessage}"></span>
         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
     </div>
 
-    <div th:if="${errorMessage}" class="alert alert-danger alert-dismissible fade show" role="alert">
+    <div id="errorAlert" th:if="${errorMessage}" class="alert alert-danger alert-dismissible fade show" role="alert">
         <span th:text="${errorMessage}"></span>
         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
     </div>
@@ -179,6 +179,30 @@
 
 </script>
 <!-- END JS DELETE -->
+
+<!-- JAVASCRIPT AUTO CLOSE AFTER 5 SEC -->
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+
+        let successAlert = document.getElementById("successAlert");
+        let errorAlert = document.getElementById("errorAlert");
+
+        if (successAlert) {
+            setTimeout(function () {
+                successAlert.classList.remove("show");
+                setTimeout(() => successAlert.remove(), 500);
+            }, 5000); // 5000ms = 5 seconds
+        }
+
+        if (errorAlert) {
+            setTimeout(function () {
+                errorAlert.classList.remove("show");
+                setTimeout(() => errorAlert.remove(), 500);
+            }, 5000); // 5000ms = 5 seconds
+        }
+    });
+</script>
+<!-- JS AUTO CLOSE -->
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
