@@ -7,13 +7,11 @@ import org.springframework.stereotype.Service;
 import za.co.twc.togetherness.womens.club.domain.Dependent;
 import za.co.twc.togetherness.womens.club.domain.Member;
 import za.co.twc.togetherness.womens.club.domain.MemberStatus;
-import za.co.twc.togetherness.womens.club.exception.DependentNotFoundException;
-import za.co.twc.togetherness.womens.club.exception.MemberInactiveException;
-import za.co.twc.togetherness.womens.club.exception.MemberCannotAddDependentsException;
-import za.co.twc.togetherness.womens.club.exception.MemberDeceasedException;
+import za.co.twc.togetherness.womens.club.exception.*;
 import za.co.twc.togetherness.womens.club.repository.DependentRepository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @Transactional
@@ -31,8 +29,13 @@ public class DependentService {
 
     public Dependent createDependent(Long memberId, Dependent dependent) {
 
+        // Check if an active dependent with this ID number already exists
+        if (dependentRepository.findByIdNumberAndDeletedFalse(dependent.getIdNumber()).isPresent()) {
+            throw new DuplicateDependentException(dependent.getIdNumber());
+        }
+
         Member member = memberService.getActiveMemberById(memberId);
-        
+
         MemberStatus memberStatus = member.getStatus();
 
         if (memberStatus == MemberStatus.INACTIVE) {
@@ -46,15 +49,29 @@ public class DependentService {
             throw new MemberCannotAddDependentsException(memberId);
         }
 
+        // Check if a soft-deleted dependent with this ID number exists — reactivate it
+        Optional<Dependent> softDeleted = dependentRepository.findByIdNumberAndDeletedTrue(dependent.getIdNumber());
+        if (softDeleted.isPresent()) {
+            Dependent existing = softDeleted.get();
+            existing.setFirstName(dependent.getFirstName());
+            existing.setLastName(dependent.getLastName());
+            existing.setBirthDate(dependent.getBirthDate());
+            existing.setRelationship(dependent.getRelationship());
+            existing.setMember(member);
+            existing.setDeleted(false);
+
+            Dependent reactivated = dependentRepository.save(existing);
+            LOGGER.info("Dependent reactivated: id={}, memberId={}", reactivated.getId(), memberId);
+            return reactivated;
+        }
+
         dependent.setMember(member);
         dependent.setDeleted(false);
 
-        Dependent saveDependent = dependentRepository.save(dependent);
+        Dependent savedDependent = dependentRepository.save(dependent);
+        LOGGER.info("Dependent created: id={}, memberId={}", savedDependent.getId(), memberId);
 
-        LOGGER.info("Dependent created: id={}, memberId={}", saveDependent.getId(), memberId);
-
-        return saveDependent;
-
+        return savedDependent;
     }
 
     public List<Dependent> getDependentsByMemberId(Long memberId) {
