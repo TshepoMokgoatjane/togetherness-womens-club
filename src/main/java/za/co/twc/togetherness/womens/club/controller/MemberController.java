@@ -11,6 +11,10 @@ import za.co.twc.togetherness.womens.club.exception.MemberHasDependentsException
 import za.co.twc.togetherness.womens.club.exception.MemberNotFoundException;
 import za.co.twc.togetherness.womens.club.service.DependentService;
 import za.co.twc.togetherness.womens.club.service.MemberService;
+import za.co.twc.togetherness.womens.club.utilities.SaIdUtils;
+
+import java.time.LocalDate;
+import java.time.Period;
 
 @Controller
 @RequestMapping("/members")
@@ -63,8 +67,17 @@ public class MemberController {
     // ==================
     @GetMapping("/{id}")
     public String viewMember(@PathVariable Long id, Model model) {
-        model.addAttribute("member", memberService.getActiveMemberById(id));
+
+        Member member = memberService.getActiveMemberById(id);
+
+        LocalDate dateOfBirth = SaIdUtils.extractDobFromId(member.getIdNumber());
+        int age = Period.between(dateOfBirth, LocalDate.now()).getYears();
+
+        model.addAttribute("member", member);
         model.addAttribute("dependents", dependentService.getDependentsByMemberId(id));
+        model.addAttribute("age", age);
+        model.addAttribute("dateOfBirth", dateOfBirth);
+
         return "member/view";
     }
 

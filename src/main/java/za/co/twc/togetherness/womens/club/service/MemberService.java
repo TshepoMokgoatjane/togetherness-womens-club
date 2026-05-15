@@ -15,7 +15,7 @@ import za.co.twc.togetherness.womens.club.exception.MemberInactiveException;
 import za.co.twc.togetherness.womens.club.exception.MemberNotFoundException;
 import za.co.twc.togetherness.womens.club.repository.MemberRepository;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -62,10 +62,6 @@ public class MemberService {
         member.setStatus(MemberStatus.ACTIVE);
         member.setDeleted(false);
 
-        if (member.getJoinDate() == null) {
-            member.setJoinDate(LocalDate.now());
-        }
-
         Member savedMember = memberRepository.save(member);
 
         LOGGER.info("Member created: memberNumber={}, status={}", savedMember.getMemberNumber(), savedMember.getStatus());
@@ -87,7 +83,7 @@ public class MemberService {
 
         MemberStatus memberStatus = existingMember.getStatus();
 
-        if (memberStatus == MemberStatus.ACTIVE) {
+        if (memberStatus == MemberStatus.INACTIVE) {
             LOGGER.warn("Attempting to update an INACTIVE member with id {}", id);
             throw new MemberInactiveException(id);
         }
