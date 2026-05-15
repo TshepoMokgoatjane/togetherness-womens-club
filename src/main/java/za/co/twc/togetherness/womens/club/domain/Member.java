@@ -1,14 +1,11 @@
 package za.co.twc.togetherness.womens.club.domain;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Pattern;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import za.co.twc.togetherness.womens.club.validation.ValidSAId;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -26,6 +23,7 @@ public class Member {
     private Long id;
 
     @Column(name = "member_number", unique = true, nullable = false)
+    @NotBlank
     private String memberNumber;
 
     @Column(name = "first_name", nullable = false)
@@ -36,31 +34,31 @@ public class Member {
     @NotBlank
     private String lastName;
 
-    @ValidSAId
     @Column(name = "id_number", nullable = false, unique = true, length = 13)
     @NotBlank
     private String idNumber;
 
-    @Email(message = "Invalid email format")
     @Column(name = "email", nullable = false, unique = true, length = 50)
     @NotBlank
     private String email;
 
-    @NotBlank(message = "Physical address is required")
     @Column(name = "physical_address", nullable = false, length = 250)
     private String physicalAddress;
 
-    @Pattern(regexp = "\\d{10}", message = "Phone number must be 10 digits long.")
     @Column(name = "phone_number", nullable = false, unique = true, length = 10)
     @NotBlank
     private String phoneNumber;
 
-    @Pattern(regexp = "\\d{10}", message = "Alternative phone number must be 10 digits long.")
     @Column(name = "alternative_phone_number", unique = true, length = 10)
     private String alternativePhoneNumber;
 
-    @Column(name = "date_joined", nullable = false, updatable = false)
-    private LocalDateTime joinDate;
+    @Column(name = "birth_date", nullable = false)
+    @NotNull
+    private LocalDate birthDate;
+
+    @Column(name = "date_joined", nullable = false)
+    @NotNull
+    private LocalDate joinDate;
 
     @Column(name = "member_status", nullable = false)
     @Enumerated(EnumType.STRING)
@@ -81,7 +79,6 @@ public class Member {
 
     @PrePersist
     public void prePersist() {
-        this.joinDate = LocalDateTime.now();
         this.createdAt = LocalDateTime.now();
         this.updatedAt = LocalDateTime.now();
     }

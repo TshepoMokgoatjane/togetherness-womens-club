@@ -8,7 +8,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import za.co.twc.togetherness.womens.club.domain.Dependent;
 import za.co.twc.togetherness.womens.club.domain.RelationshipType;
-import za.co.twc.togetherness.womens.club.exception.DuplicateDependentException;
 import za.co.twc.togetherness.womens.club.service.DependentService;
 import za.co.twc.togetherness.womens.club.service.MemberService;
 
@@ -64,20 +63,5 @@ public class DependentController {
         dependentService.softDeleteDependent(dependentId);
         redirectAttributes.addFlashAttribute("successMessage", "Dependent deleted successfully!");
         return "redirect:/members/" + memberId + "/dependents";
-    }
-
-    @ExceptionHandler(DuplicateDependentException.class)
-    public String handleDuplicateDependentException(
-            DuplicateDependentException ex,
-            RedirectAttributes redirectAttributes,
-            jakarta.servlet.http.HttpServletRequest request) {
-
-        // Extract memberId from the request URI (e.g., /members/1/dependents)
-        String uri = request.getRequestURI();
-        String memberId = uri.split("/members/")[1].split("/")[0];
-
-        redirectAttributes.addFlashAttribute("errorMessage", ex.getMessage());
-
-        return "redirect:/members/" + memberId + "/dependents/new";
     }
 }
