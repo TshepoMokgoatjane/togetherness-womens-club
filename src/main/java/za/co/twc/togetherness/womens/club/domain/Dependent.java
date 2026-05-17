@@ -40,7 +40,7 @@ public class Dependent {
     private String idNumber;
 
     @Email(message = "Invalid email format")
-    @Column(name = "email", nullable = false, unique = true, length = 50)
+    @Column(name = "email", nullable = false, length = 50)
     @NotBlank
     private String email;
 
