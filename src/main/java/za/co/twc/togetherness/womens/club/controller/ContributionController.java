@@ -58,6 +58,10 @@ public class ContributionController {
             model.addAttribute("memberError", "Please select a member");
         }
 
+        if (contribution.getReference() == null || contribution.getReference().isBlank()) {
+            result.rejectValue("reference", "error.contribution", "Reference is required");
+        }
+
         if (result.hasErrors() || memberId == null) {
             model.addAttribute("members", memberService.getAllActiveMembers());
             model.addAttribute("selectedMemberId", memberId);
@@ -94,6 +98,10 @@ public class ContributionController {
                          BindingResult result,
                          Model model,
                          RedirectAttributes redirectAttributes) {
+
+        if (contribution.getReference() == null || contribution.getReference().isBlank()) {
+            result.rejectValue("reference", "error.contribution", "Reference is required");
+        }
 
         if (result.hasErrors()) {
             model.addAttribute("member", memberService.getActiveMemberById(memberId));
