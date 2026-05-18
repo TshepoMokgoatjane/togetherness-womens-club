@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Register - Togetherness Women's Club</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet" />
+</head>
+<body class="bg-dark d-flex align-items-center" style="min-height: 100vh;">
+
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-5 col-lg-4">
+
+            <!-- LOGO -->
+            <div class="text-center mb-4">
+                <img th:src="@{/images/logo-square.png}" alt="Togetherness Women's Club" height="120" class="mb-3" />
+                <h4 class="text-white fw-bold">Togetherness <span class="text-success">Women's Club</span></h4>
+            </div>
+
+            <!-- REGISTRATION CARD -->
+            <div class="card shadow">
+                <div class="card-body p-4">
+
+                    <h5 class="card-title text-center mb-4">Create Account</h5>
+
+                    <form th:action="@{/register}" th:object="${registrationForm}" method="post">
+
+                        <div class="mb-3">
+                            <label for="username" class="form-label">Username</label>
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="bi bi-person"></i></span>
+                                <input type="text" class="form-control" id="username"
+                                       th:field="*{username}" placeholder="Choose a username"
+                                       th:classappend="${#fields.hasErrors('username')} ? 'is-invalid'" />
+                                <div class="invalid-feedback" th:if="${#fields.hasErrors('username')}"
+                                     th:errors="*{username}"></div>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="password" class="form-label">Password</label>
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="bi bi-lock"></i></span>
+                                <input type="password" class="form-control" id="password"
+                                       th:field="*{password}" placeholder="Create a password"
+                                       th:classappend="${#fields.hasErrors('password')} ? 'is-invalid'" />
+                                <div class="invalid-feedback" th:if="${#fields.hasErrors('password')}"
+                                     th:errors="*{password}"></div>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="confirmPassword" class="form-label">Confirm Password</label>
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="bi bi-lock-fill"></i></span>
+                                <input type="password" class="form-control" id="confirmPassword"
+                                       th:field="*{confirmPassword}" placeholder="Confirm your password"
+                                       th:classappend="${#fields.hasErrors('confirmPassword')} ? 'is-invalid'" />
+                                <div class="invalid-feedback" th:if="${#fields.hasErrors('confirmPassword')}"
+                                     th:errors="*{confirmPassword}"></div>
+                            </div>
+                        </div>
+
+                        <div class="d-grid mt-4">
+                            <button type="submit" class="btn btn-success btn-lg">
+                                <i class="bi bi-person-plus me-1"></i>Register
+                            </button>
+                        </div>
+
+                    </form>
+
+                    <div class="text-center mt-3">
+                        <small>Already have an account? <a th:href="@{/login}" class="text-success">Sign in</a></small>
+                    </div>
+                </div>
+            </div>
+
+            <!-- FOOTER -->
+            <p class="text-center text-secondary mt-4">
+                <small>&copy; <span th:text="${#dates.format(#dates.createNow(), 'yyyy')}"></span> Togetherness Women's Club</small>
+            </p>
+
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
