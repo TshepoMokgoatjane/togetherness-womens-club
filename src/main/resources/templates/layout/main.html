@@ -43,6 +43,24 @@
                         <i class="bi bi-person-plus me-1"></i>Add Member
                     </a>
                 </li>
+                <li class="nav-item dropdown" sec:authorize="hasAnyRole('ADMIN', 'TREASURER')">
+                    <a class="nav-link dropdown-toggle" href="#" role="button"
+                       data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="bi bi-cash-coin me-1"></i>Contributions
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li>
+                            <a class="dropdown-item" th:href="@{/contributions}">
+                                <i class="bi bi-list-ul me-1"></i>View All
+                            </a>
+                        </li>
+                        <li>
+                            <a class="dropdown-item" th:href="@{/contributions/new}">
+                                <i class="bi bi-plus-circle me-1"></i>Add Contribution
+                            </a>
+                        </li>
+                    </ul>
+                </li>
                 <li class="nav-item">
                     <a class="nav-link" th:href="@{/profile}">
                         <i class="bi bi-person-circle me-1"></i>My Profile

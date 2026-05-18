@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      th:replace="~{layout/main :: layout(~{::content})}">
+
+<div th:fragment="content">
+
+    <div class="text-center py-5">
+        <i class="bi bi-exclamation-octagon-fill text-danger display-1"></i>
+        <h1 class="display-5 mt-3">Something went wrong</h1>
+        <p class="lead mt-2 text-muted">An unexpected error occurred. Please try again or contact an administrator.</p>
+
+        <a th:href="@{/members}" class="btn btn-success mt-3" sec:authorize="hasAnyRole('ADMIN', 'TREASURER')">
+            <i class="bi bi-arrow-left me-1"></i>Back to Members
+        </a>
+        <a th:href="@{/profile}" class="btn btn-success mt-3" sec:authorize="hasRole('USER')">
+            <i class="bi bi-arrow-left me-1"></i>Back to Profile
+        </a>
+        <a th:href="@{/login}" class="btn btn-success mt-3" sec:authorize="!isAuthenticated()">
+            <i class="bi bi-box-arrow-in-right me-1"></i>Login
+        </a>
+    </div>
+
+</div>
+
+</html>
