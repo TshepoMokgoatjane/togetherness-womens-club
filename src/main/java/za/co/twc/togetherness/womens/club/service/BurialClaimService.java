@@ -38,6 +38,11 @@ public class BurialClaimService {
         return burialClaimRepository.findAll();
     }
 
+    public java.util.List<BurialClaim> getClaimsByMemberId(Long memberId) {
+        LOGGER.info("Get claims for member {}", memberId);
+        return burialClaimRepository.findByMemberId(memberId);
+    }
+
     public boolean hasPaidLast3ConsecutiveMonths(Member member) {
 
         YearMonth now = YearMonth.now();

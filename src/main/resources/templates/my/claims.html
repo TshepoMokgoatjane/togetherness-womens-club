@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" th:replace="~{layout/main :: layout(~{::content})}">
+
+<div th:fragment="content">
+
+    <h2><i class="bi bi-file-earmark-medical me-2"></i>My Claims</h2>
+
+    <div class="d-flex gap-2 mt-3 mb-3">
+        <a th:href="@{/my/claims/new}" class="btn btn-success">
+            <i class="bi bi-plus-circle me-1"></i>Submit New Claim
+        </a>
+        <a th:href="@{/my}" class="btn btn-secondary">
+            <i class="bi bi-arrow-left me-1"></i>Back to Dashboard
+        </a>
+    </div>
+
+    <div class="table-responsive">
+        <table class="table table-striped table-hover table-bordered">
+            <thead class="table-dark">
+                <tr>
+                    <th>#</th>
+                    <th>Deceased Name</th>
+                    <th>Claim Amount</th>
+                    <th>Claim Date</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="claim, iter : ${claims}">
+                    <td th:text="${iter.count}"></td>
+                    <td th:text="${claim.deceasedName}"></td>
+                    <td th:text="'R ' + ${#numbers.formatDecimal(claim.claimAmount, 1, 2)}"></td>
+                    <td th:text="${claim.claimDate}"></td>
+                    <td>
+                        <span class="badge"
+                              th:classappend="${claim.status.name() == 'APPROVED'} ? 'bg-success' :
+                                              (${claim.status.name() == 'PENDING'} ? 'bg-warning text-dark' : 'bg-danger')"
+                              th:text="${claim.status}"></span>
+                    </td>
+                </tr>
+                <tr th:if="${#lists.isEmpty(claims)}">
+                    <td colspan="5" class="text-center text-muted py-4">
+                        <i class="bi bi-inbox fs-3 d-block mb-2"></i>
+                        No claims submitted yet
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+</div>
+
+</html>

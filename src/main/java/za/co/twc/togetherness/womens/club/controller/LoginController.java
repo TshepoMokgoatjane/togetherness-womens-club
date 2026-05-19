@@ -13,7 +13,14 @@ public class LoginController {
 
     @GetMapping("/login-success")
     public String loginSuccess(org.springframework.security.core.Authentication authentication) {
-        return "redirect:/home";
+        boolean isAdminOrTreasurer = authentication.getAuthorities().stream()
+                .anyMatch(auth -> auth.getAuthority().equals("ROLE_ADMIN")
+                        || auth.getAuthority().equals("ROLE_TREASURER"));
+
+        if (isAdminOrTreasurer) {
+            return "redirect:/home";
+        }
+        return "redirect:/my";
     }
 
     @GetMapping("/access-denied")

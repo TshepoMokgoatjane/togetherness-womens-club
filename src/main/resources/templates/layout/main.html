@@ -92,12 +92,39 @@
                         <i class="bi bi-bar-chart me-1"></i>Reports
                     </a>
                 </li>
+
+                <!-- USER ROLE MENU -->
+                <li class="nav-item" sec:authorize="hasRole('USER')">
+                    <a class="nav-link" th:href="@{/my}">
+                        <i class="bi bi-house me-1"></i>My Dashboard
+                    </a>
+                </li>
+                <li class="nav-item" sec:authorize="hasRole('USER')">
+                    <a class="nav-link" th:href="@{/my/dependents}">
+                        <i class="bi bi-person-hearts me-1"></i>My Dependents
+                    </a>
+                </li>
+                <li class="nav-item" sec:authorize="hasRole('USER')">
+                    <a class="nav-link" th:href="@{/my/contributions}">
+                        <i class="bi bi-cash-coin me-1"></i>My Contributions
+                    </a>
+                </li>
+                <li class="nav-item" sec:authorize="hasRole('USER')">
+                    <a class="nav-link" th:href="@{/my/claims}">
+                        <i class="bi bi-file-earmark-medical me-1"></i>My Claims
+                    </a>
+                </li>
             </ul>
 
             <!-- USER INFO + LOGOUT -->
             <div class="d-flex align-items-center">
-                <a th:href="@{/profile}" class="text-light text-decoration-none me-3"
+                <a sec:authorize="hasAnyRole('ADMIN', 'TREASURER')" th:href="@{/profile}" class="text-light text-decoration-none me-3"
                    data-bs-toggle="tooltip" data-bs-placement="bottom" title="My Profile">
+                    <i class="bi bi-person-check me-1"></i>
+                    <span sec:authentication="name"></span>
+                </a>
+                <a sec:authorize="hasRole('USER')" th:href="@{/my}" class="text-light text-decoration-none me-3"
+                   data-bs-toggle="tooltip" data-bs-placement="bottom" title="My Dashboard">
                     <i class="bi bi-person-check me-1"></i>
                     <span sec:authentication="name"></span>
                 </a>

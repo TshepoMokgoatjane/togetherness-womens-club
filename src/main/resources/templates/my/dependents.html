@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" th:replace="~{layout/main :: layout(~{::content})}">
+
+<div th:fragment="content">
+
+    <h2><i class="bi bi-person-hearts me-2"></i>My Dependents</h2>
+
+    <div class="d-flex gap-2 mt-3 mb-3">
+        <a th:href="@{/my/dependents/new}" class="btn btn-success">
+            <i class="bi bi-person-plus me-1"></i>Add Dependent
+        </a>
+        <a th:href="@{/my}" class="btn btn-secondary">
+            <i class="bi bi-arrow-left me-1"></i>Back to Dashboard
+        </a>
+    </div>
+
+    <div class="table-responsive">
+        <table class="table table-striped table-hover table-bordered">
+            <thead class="table-dark">
+                <tr>
+                    <th>#</th>
+                    <th>Name</th>
+                    <th>ID Number</th>
+                    <th>Relationship</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="dependent, iter : ${dependents}">
+                    <td th:text="${iter.count}"></td>
+                    <td th:text="${dependent.firstName + ' ' + dependent.lastName}"></td>
+                    <td th:text="${dependent.idNumber}"></td>
+                    <td th:text="${dependent.relationship}"></td>
+                </tr>
+                <tr th:if="${#lists.isEmpty(dependents)}">
+                    <td colspan="4" class="text-center text-muted py-4">
+                        <i class="bi bi-inbox fs-3 d-block mb-2"></i>
+                        No dependents registered yet
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+</div>
+
+</html>

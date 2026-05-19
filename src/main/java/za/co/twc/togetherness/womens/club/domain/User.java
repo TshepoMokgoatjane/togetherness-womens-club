@@ -18,5 +18,8 @@ public class User {
 
     private String username;
     private String password;
-    private String role; // ROLE_ADMIN, ROLE_TREASURER
+    private String role; // ADMIN, TREASURER, USER
+
+    @Column(name = "member_id")
+    private Long memberId;
 }
