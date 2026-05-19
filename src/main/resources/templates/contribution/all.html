@@ -21,14 +21,17 @@
                 <tr th:each="contribution, iter : ${contributions}">
                     <td th:text="${contribution.member.memberNumber}"></td>
                     <td th:text="${contribution.member.firstName + ' ' + contribution.member.lastName}"></td>
-                    <td th:text="'R ' + ${#numbers.formatDecimal(contribution.amount, 1, 2)}"></td>
-                    <td th:text="${contribution.reference}"></td>
-                    <td th:text="${contribution.paymentDate}"></td>
+                    <td th:text="'R ' + ${#numbers.formatDecimal(contribution.amount, 1, 2) != null ? #numbers.formatDecimal(contribution.amount, 1, 2) : '-'}"></td>
+                    <td th:text="${contribution.reference != null ? contribution.reference : '-'}"></td>
+                    <td th:text="${contribution.paymentDate != null ? contribution.paymentDate : '-'}"></td>
                     <td>
                         <span class="badge"
                               th:classappend="${contribution.status.name() == 'PAID'} ? 'bg-success' :
                                               (${contribution.status.name() == 'PENDING'} ? 'bg-warning text-dark' : 'bg-danger')"
-                              th:text="${contribution.status}"></span>
+                              th:text="${contribution.status}"
+                              th:attr="title=${contribution.status.name() == 'PENDING'} ? 'Awaiting Payment' :
+                                        (${contribution.status.name() == 'PAID'} ? 'Payment Completed' : 'Payment Missed')"
+                              data-bs-toggle="tooltip" data-bs-placement="right"></span>
                     </td>
                 </tr>
                 <tr th:if="${#lists.isEmpty(contributions)}">
