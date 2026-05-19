@@ -123,7 +123,6 @@ public class ContributionService {
         LOGGER.info("Monthly contributions have been generated successfully");
     }
 
-    @Transactional
     public void markMissedContributions() {
         LOGGER.info("Marking missed contributions for this month.");
         YearMonth currentMonth = YearMonth.now();
