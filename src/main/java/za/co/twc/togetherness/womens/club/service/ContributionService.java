@@ -136,4 +136,17 @@ public class ContributionService {
             contribution.setStatus(ContributionStatus.MISSED);
         }
     }
+
+    public BigDecimal getTotalContributionsForTheMonth(YearMonth yearMonth) {
+        LOGGER.info("Get total contributions for this month {}", yearMonth);
+        return contributionRepository.findByContributionMonthAndStatus(yearMonth, ContributionStatus.PAID)
+                .stream()
+                .map(Contribution::getAmount)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+    }
+
+    public List<Contribution> getByStatus(YearMonth yearMonth, ContributionStatus status) {
+        LOGGER.info("Get all contributions statuses for this month {}", yearMonth);
+        return contributionRepository.findByContributionMonthAndStatus(yearMonth, status);
+    }
 }
