@@ -28,9 +28,22 @@ public class ReportController {
 
         model.addAttribute("pageTitle", "Contribution Report");
         model.addAttribute("total", contributionService.getTotalContributionsForTheMonth(currentMonth));
-        model.addAttribute("paid", contributionService.getByStatus(currentMonth, ContributionStatus.PAID));
-        model.addAttribute("pending", contributionService.getByStatus(currentMonth, ContributionStatus.PENDING));
-        model.addAttribute("missed", contributionService.getByStatus(currentMonth, ContributionStatus.MISSED));
+
+        var paid = contributionService.getByStatus(currentMonth, ContributionStatus.PAID);
+        var pending = contributionService.getByStatus(currentMonth, ContributionStatus.PENDING);
+        var missed = contributionService.getByStatus(currentMonth, ContributionStatus.MISSED);
+
+        model.addAttribute("paid", paid);
+        model.addAttribute("pending", pending);
+        model.addAttribute("missed", missed);
+
+        // ADD COUNTS FOR CHARTS
+        model.addAttribute("paidCount", paid.size());
+        model.addAttribute("pendingCount", pending.size());
+        model.addAttribute("missedCount", missed.size());
+
+        // ADD LINE CHART DATA
+        model.addAttribute("monthlyData", contributionService.getLast6MonthsTotal());
 
         return "report/contribution-report";
     }

@@ -36,20 +36,18 @@
                     <td>
                         <!-- Only show actions for PENDING claims -->
                         <div th:if="${claim.status.name() == 'PENDING'}" class="d-flex gap-1">
-                            <form th:action="@{/claims/{id}/approve(id=${claim.id})}" method="post">
-                                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
-                                <button type="submit" class="btn btn-sm btn-success" title="Approve"
-                                        onclick="return confirm('Approve this claim?');">
-                                    <i class="bi bi-check-lg me-1"></i>Approve
-                                </button>
-                            </form>
-                            <form th:action="@{/claims/{id}/decline(id=${claim.id})}" method="post">
-                                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
-                                <button type="submit" class="btn btn-sm btn-danger" title="Decline"
-                                        onclick="return confirm('Decline this claim? This cannot be undone.');">
-                                    <i class="bi bi-x-lg me-1"></i>Decline
-                                </button>
-                            </form>
+                            <button type="button" class="btn btn-sm btn-success" title="Approve"
+                                    onclick="showClaimModal(this, 'approve')"
+                                    th:data-url="@{/claims/{id}/approve(id=${claim.id})}"
+                                    th:data-name="${claim.member.firstName + ' ' + claim.member.lastName}">
+                                <i class="bi bi-check-lg me-1"></i>Approve
+                            </button>
+                            <button type="button" class="btn btn-sm btn-danger" title="Decline"
+                                    onclick="showClaimModal(this, 'decline')"
+                                    th:data-url="@{/claims/{id}/decline(id=${claim.id})}"
+                                    th:data-name="${claim.member.firstName + ' ' + claim.member.lastName}">
+                                <i class="bi bi-x-lg me-1"></i>Decline
+                            </button>
                         </div>
                         <span th:if="${claim.status.name() != 'PENDING'}" class="text-muted">
                             <small>No actions</small>
@@ -65,6 +63,90 @@
             </tbody>
         </table>
     </div>
+
+    <!-- CLAIM ACTION CONFIRMATION MODAL -->
+    <div class="modal fade" id="claimActionModal" tabindex="-1" aria-labelledby="claimActionModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+
+                <div class="modal-header" id="claimModalHeader">
+                    <h5 class="modal-title" id="claimActionModalLabel">
+                        <i class="bi bi-question-circle-fill me-2"></i>
+                        <span id="claimModalTitle"></span>
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+
+                <div class="modal-body">
+                    <span id="claimModalMessage"></span>
+                    <strong id="claimMemberName" class="text-dark"></strong>?
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+
+                    <form id="claimActionForm" method="post">
+                        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+                        <button type="submit" class="btn" id="claimActionBtn">
+                            <span id="claimActionBtnText"></span>
+                            <span id="claimActionSpinner" class="spinner-border spinner-border-sm ms-2 d-none"></span>
+                        </button>
+                    </form>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <!-- END MODAL -->
+
+    <!-- JAVASCRIPT -->
+    <script th:inline="javascript">
+        function showClaimModal(button, action) {
+            let url = button.getAttribute("data-url");
+            let name = button.getAttribute("data-name");
+
+            let modalHeader = document.getElementById("claimModalHeader");
+            let modalTitle = document.getElementById("claimModalTitle");
+            let modalMessage = document.getElementById("claimModalMessage");
+            let memberName = document.getElementById("claimMemberName");
+            let actionBtn = document.getElementById("claimActionBtn");
+            let actionBtnText = document.getElementById("claimActionBtnText");
+
+            document.getElementById("claimActionForm").action = url;
+            memberName.textContent = name;
+
+            if (action === 'approve') {
+                modalHeader.className = "modal-header bg-success text-white";
+                modalTitle.textContent = "Approve Claim";
+                modalMessage.textContent = "Are you sure you want to approve the claim for ";
+                actionBtn.className = "btn btn-success";
+                actionBtnText.innerHTML = '<i class="bi bi-check-lg me-1"></i>Approve';
+            } else {
+                modalHeader.className = "modal-header bg-danger text-white";
+                modalTitle.textContent = "Decline Claim";
+                modalMessage.textContent = "Are you sure you want to decline the claim for ";
+                actionBtn.className = "btn btn-danger";
+                actionBtnText.innerHTML = '<i class="bi bi-x-lg me-1"></i>Decline';
+            }
+
+            let modal = new bootstrap.Modal(document.getElementById('claimActionModal'));
+            modal.show();
+        }
+
+        let claimForm = document.getElementById("claimActionForm");
+        if (claimForm) {
+            claimForm.addEventListener("submit", function() {
+                let btn = document.getElementById("claimActionBtn");
+                let spinner = document.getElementById("claimActionSpinner");
+                btn.disabled = true;
+                spinner.classList.remove("d-none");
+
+                let modalEl = document.getElementById('claimActionModal');
+                let modal = bootstrap.Modal.getInstance(modalEl);
+                modal.hide();
+            });
+        }
+    </script>
 
 </div>
 

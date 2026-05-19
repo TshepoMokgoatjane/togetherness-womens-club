@@ -52,6 +52,33 @@
         </div>
     </div>
 
+    <div class="row mt-5">
+        <!-- PIE CHART -->
+        <div class="col-md-6">
+            <div class="card p-3">
+                <h5>Contribution Status Distribution</h5>
+                <canvas id="statusPieChart"></canvas>
+            </div>
+        </div>
+
+        <!-- BAR CHART -->
+        <div class="col-md-6">
+            <div class="card p-3">
+                <h5>Contribution Counts</h5>
+                <canvas id="statusBarChart"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mt-5">
+        <div class="col-md-12">
+            <div class="card p-3">
+                <h5>Monthly Contribution Trends (Last 6 months)</h5>
+                <canvas id="lineChart"></canvas>
+            </div>
+        </div>
+    </div>
+
     <!-- PAID MEMBERS -->
     <h4 class="mt-5"><i class="bi bi-check-circle-fill text-success me-2"></i>Paid Members</h4>
     <div class="table-responsive mt-2">
@@ -135,6 +162,81 @@
             </tbody>
         </table>
     </div>
+
+    <!-- CHART SCRIPTS -->
+    <script th:inline="javascript">
+
+        document.addEventListener("DOMContentLoaded", function() {
+
+            // DATA FROM BACKEND
+            let paid = [[${paidCount}]];
+            let pending = [[${pendingCount}]];
+            let missed = [[${missedCount}]];
+
+            // MONTHLY DATA FROM BACKEND
+            let monthlyData = [[${monthlyData}]];
+
+            let labels = Object.keys(monthlyData);
+            let values = Object.values(monthlyData);
+
+        // LINE CHART
+        new Chart(document.getElementById("lineChart"), {
+            type: 'line',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: 'Total Contributions (R)',
+                    data: values,
+                    borderColor: '#198754',
+                    backgroundColor: 'rgba(25,135,84,0.2)',
+                    fill: true,
+                    tension: 0.3
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        display: true
+                    }
+                }
+            }
+        });
+
+        // PIE CHART
+        new Chart(document.getElementById('statusPieChart'), {
+            type: 'pie',
+            data: {
+                labels: ['Paid', 'Pending', 'Missed'],
+                datasets: [{
+                    data: [paid, pending, missed],
+                    backgroundColor: [
+                        '#198754',
+                        '#ffc107',
+                        '#dc3545'
+                    ]
+                }]
+            }
+        });
+
+        // BAR CHART
+        new Chart(document.getElementById('statusBarChart'), {
+            type: 'bar',
+            data: {
+                labels: ['Paid', 'Pending', 'Missed'],
+                datasets: [{
+                    label: 'Members',
+                    data: [paid, pending, missed],
+                    backgroundColor: [
+                        '#198754',
+                        '#ffc107',
+                        '#dc3545'
+                    ]
+                }]
+            }
+        });
+    });
+    </script>
 
 </div>
 

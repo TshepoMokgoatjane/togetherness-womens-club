@@ -17,7 +17,9 @@ import za.co.twc.togetherness.womens.club.repository.ContributionRepository;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.YearMonth;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 @Transactional
@@ -148,5 +150,27 @@ public class ContributionService {
     public List<Contribution> getByStatus(YearMonth yearMonth, ContributionStatus status) {
         LOGGER.info("Get all contributions statuses for this month {}", yearMonth);
         return contributionRepository.findByContributionMonthAndStatus(yearMonth, status);
+    }
+
+    public Map<String, BigDecimal> getLast6MonthsTotal() {
+
+        LOGGER.info("Get last 6 months total for this month");
+
+        Map<String, BigDecimal> data = new LinkedHashMap<>();
+
+        YearMonth currentMonth = YearMonth.now();
+
+        for (int i = 5; i >= 0; i--) {
+
+            YearMonth month = currentMonth.minusMonths(i);
+
+            BigDecimal total = contributionRepository.findByContributionMonthAndStatus(month, ContributionStatus.PAID)
+                    .stream()
+                    .map(Contribution::getAmount)
+                    .reduce(BigDecimal.ZERO, BigDecimal::add);
+
+            data.put(month.toString(), total);
+        }
+        return data;
     }
 }
