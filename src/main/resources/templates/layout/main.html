@@ -18,7 +18,7 @@
 <!-- HEADER -->
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark shadow-sm py-2">
     <div class="container">
-        <a class="navbar-brand d-flex align-items-center" th:href="@{/members}">
+        <a class="navbar-brand d-flex align-items-center" th:href="@{/home}">
             <img th:src="@{/images/logo-square.png}" alt="Togetherness Women's Club (TWC)" height="55" class="me-2 rounded-circle" />
             <span class="fw-bold">Togetherness <span class="text-success">Women's Club</span></span>
         </a>
@@ -33,15 +33,23 @@
 
             <!-- NAV LINKS -->
             <ul class="navbar-nav me-auto ms-3">
-                <li class="nav-item" sec:authorize="hasAnyRole('ADMIN', 'TREASURER')">
-                    <a class="nav-link" th:href="@{/members}">
+                <li class="nav-item dropdown" sec:authorize="hasAnyRole('ADMIN', 'TREASURER')">
+                    <a class="nav-link dropdown-toggle" href="#" role="button"
+                       data-bs-toggle="dropdown" aria-expanded="false">
                         <i class="bi bi-people me-1"></i>Members
                     </a>
-                </li>
-                <li class="nav-item" sec:authorize="hasAnyRole('ADMIN', 'TREASURER')">
-                    <a class="nav-link" th:href="@{/members/new}">
-                        <i class="bi bi-person-plus me-1"></i>Add Member
-                    </a>
+                    <ul class="dropdown-menu">
+                        <li>
+                            <a class="dropdown-item" th:href="@{/members}">
+                                <i class="bi bi-list-ul me-1"></i>All Members
+                            </a>
+                        </li>
+                        <li>
+                            <a class="dropdown-item" th:href="@{/members/new}">
+                                <i class="bi bi-person-plus me-1"></i>Add Member
+                            </a>
+                        </li>
+                    </ul>
                 </li>
                 <li class="nav-item dropdown" sec:authorize="hasAnyRole('ADMIN', 'TREASURER')">
                     <a class="nav-link dropdown-toggle" href="#" role="button"
@@ -61,10 +69,23 @@
                         </li>
                     </ul>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link" th:href="@{/profile}">
-                        <i class="bi bi-person-circle me-1"></i>My Profile
+                <li class="nav-item dropdown" sec:authorize="hasAnyRole('ADMIN', 'TREASURER')">
+                    <a class="nav-link dropdown-toggle" href="#" role="button"
+                       data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="bi bi-file-earmark-medical me-1"></i>Claims
                     </a>
+                    <ul class="dropdown-menu">
+                        <li>
+                            <a class="dropdown-item" th:href="@{/claims}">
+                                <i class="bi bi-list-ul me-1"></i>All Claims
+                            </a>
+                        </li>
+                        <li>
+                            <a class="dropdown-item" th:href="@{/claims/new}">
+                                <i class="bi bi-plus-circle me-1"></i>Submit Claim
+                            </a>
+                        </li>
+                    </ul>
                 </li>
                 <li class="nav-item" sec:authorize="hasAnyRole('ADMIN', 'TREASURER')">
                     <a class="nav-link" th:href="@{/reports/contributions}">
@@ -75,10 +96,11 @@
 
             <!-- USER INFO + LOGOUT -->
             <div class="d-flex align-items-center">
-                <span class="text-light me-3">
+                <a th:href="@{/profile}" class="text-light text-decoration-none me-3"
+                   data-bs-toggle="tooltip" data-bs-placement="bottom" title="My Profile">
                     <i class="bi bi-person-check me-1"></i>
                     <span sec:authentication="name"></span>
-                </span>
+                </a>
                 <form th:action="@{/logout}" method="post" class="mb-0">
                     <button type="submit" class="btn btn-outline-danger btn-sm">
                         <i class="bi bi-box-arrow-right me-1"></i>Logout

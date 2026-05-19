@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      th:replace="~{layout/main :: layout(~{::content})}">
+
+<div th:fragment="content">
+
+    <!-- HERO SECTION -->
+    <div class="text-center py-4">
+        <img th:src="@{/images/logo-square.png}" alt="TWC" height="100" class="rounded-circle mb-3" />
+        <h1 class="fw-bold">Togetherness <span class="text-success">Women's Club</span></h1>
+        <p class="lead text-muted">Empowering women through unity, support, and financial solidarity.</p>
+    </div>
+
+    <!-- FEATURE CARDS -->
+    <div class="row g-4 mt-2">
+        <div class="col-md-3">
+            <div class="card h-100 border-0 shadow-sm text-center">
+                <div class="card-body">
+                    <i class="bi bi-people-fill text-success display-4"></i>
+                    <h5 class="card-title mt-3">Members</h5>
+                    <p class="card-text text-muted">Manage club members, track their details, and maintain an up-to-date registry.</p>
+                    <a th:href="@{/members}" class="btn btn-outline-success btn-sm" sec:authorize="hasAnyRole('ADMIN', 'TREASURER')">
+                        View Members
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card h-100 border-0 shadow-sm text-center">
+                <div class="card-body">
+                    <i class="bi bi-person-hearts text-success display-4"></i>
+                    <h5 class="card-title mt-3">Dependents</h5>
+                    <p class="card-text text-muted">Register and manage dependents linked to each member for burial cover.</p>
+                    <a th:href="@{/members}" class="btn btn-outline-success btn-sm" sec:authorize="hasAnyRole('ADMIN', 'TREASURER')">
+                        Manage
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card h-100 border-0 shadow-sm text-center">
+                <div class="card-body">
+                    <i class="bi bi-cash-coin text-success display-4"></i>
+                    <h5 class="card-title mt-3">Contributions</h5>
+                    <p class="card-text text-muted">Track monthly payments, record contributions, and monitor who has paid.</p>
+                    <a th:href="@{/contributions}" class="btn btn-outline-success btn-sm" sec:authorize="hasAnyRole('ADMIN', 'TREASURER')">
+                        View All
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card h-100 border-0 shadow-sm text-center">
+                <div class="card-body">
+                    <i class="bi bi-file-earmark-medical text-success display-4"></i>
+                    <h5 class="card-title mt-3">Claims</h5>
+                    <p class="card-text text-muted">Submit and process burial claims for eligible members during difficult times.</p>
+                    <a th:href="@{/claims}" class="btn btn-outline-success btn-sm" sec:authorize="hasAnyRole('ADMIN', 'TREASURER')">
+                        View Claims
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- QUICK STATS (admin/treasurer only) -->
+    <div sec:authorize="hasAnyRole('ADMIN', 'TREASURER')" class="mt-5">
+        <h4 class="mb-3"><i class="bi bi-speedometer2 me-2"></i>Quick Overview</h4>
+        <div class="row g-3">
+            <div class="col-md-4">
+                <div class="card bg-success text-white shadow-sm">
+                    <div class="card-body d-flex justify-content-between align-items-center">
+                        <div>
+                            <h6 class="mb-0">Active Members</h6>
+                            <h3 class="mb-0" th:text="${totalMembers}"></h3>
+                        </div>
+                        <i class="bi bi-people fs-1 opacity-50"></i>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card bg-dark text-white shadow-sm">
+                    <div class="card-body d-flex justify-content-between align-items-center">
+                        <div>
+                            <h6 class="mb-0">Total Contributions</h6>
+                            <h3 class="mb-0" th:text="${totalContributions}"></h3>
+                        </div>
+                        <i class="bi bi-cash-stack fs-1 opacity-50"></i>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card bg-warning text-dark shadow-sm">
+                    <div class="card-body d-flex justify-content-between align-items-center">
+                        <div>
+                            <h6 class="mb-0">Pending Claims</h6>
+                            <h3 class="mb-0" th:text="${pendingClaims}"></h3>
+                        </div>
+                        <i class="bi bi-hourglass-split fs-1 opacity-50"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ABOUT SECTION -->
+    <div class="mt-5 mb-3">
+        <div class="card border-0 shadow-sm">
+            <div class="card-body">
+                <h5><i class="bi bi-info-circle me-2"></i>About Us</h5>
+                <p class="text-muted mb-0">
+                    The Togetherness Women's Club is a community-driven burial society that provides financial
+                    support to members and their families during times of bereavement. Through monthly contributions,
+                    we ensure that every member has access to dignified burial assistance when they need it most.
+                    Our system tracks membership, dependents, contributions, and claims to ensure transparency
+                    and accountability.
+                </p>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+</html>
