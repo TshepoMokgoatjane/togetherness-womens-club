@@ -35,13 +35,17 @@ public class MemberController {
     @GetMapping
     public String listMembers(@RequestParam(defaultValue = "0") int page,
                               @RequestParam(defaultValue = "10") int size,
+                              @RequestParam(required = false) String search,
+                              @RequestParam(required = false) za.co.twc.togetherness.womens.club.domain.MemberStatus status,
                               Model model) {
-        var membersPage = memberService.getActiveMembersPaginated(page, size);
+        var membersPage = memberService.searchAndFilterMembers(page, size, search, status);
         model.addAttribute("members", membersPage.getContent());
         model.addAttribute("currentPage", page);
         model.addAttribute("totalPages", membersPage.getTotalPages());
         model.addAttribute("totalItems", membersPage.getTotalElements());
         model.addAttribute("pageSize", size);
+        model.addAttribute("search", search);
+        model.addAttribute("status", status);
         return "member/list";
     }
 

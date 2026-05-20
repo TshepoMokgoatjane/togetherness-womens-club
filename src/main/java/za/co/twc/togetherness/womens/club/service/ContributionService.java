@@ -6,6 +6,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import za.co.twc.togetherness.womens.club.domain.Contribution;
@@ -179,5 +180,22 @@ public class ContributionService {
 
     public Page<Contribution> getPaginationContributions(int page, int size, String sortBy) {
         return contributionRepository.findAll(PageRequest.of(page, size, Sort.by(sortBy).descending()));
+    }
+
+    public Page<Contribution> searchAndFilterContributions(int page, int size, String sortBy, String search, ContributionStatus status) {
+        LOGGER.info("Search and filter contributions for page {}", page);
+
+        Pageable pageable = PageRequest.of(page, size, Sort.by(sortBy).descending());
+
+        if (search != null && !search.isBlank() && status != null) {
+            return contributionRepository.searchContributionsWithStatus(search, status, pageable);
+        }
+        if (search != null && !search.isBlank()) {
+            return contributionRepository.searchContributions(search, pageable);
+        }
+        if (status != null) {
+            return contributionRepository.findByStatus(status, pageable);
+        }
+        return contributionRepository.findAll(pageable);
     }
 }

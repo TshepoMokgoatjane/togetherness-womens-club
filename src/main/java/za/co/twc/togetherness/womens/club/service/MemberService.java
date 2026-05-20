@@ -52,6 +52,22 @@ public class MemberService {
         return memberRepository.findByDeletedFalse(pageable);
     }
 
+    @Transactional(readOnly = true)
+    public Page<Member> searchAndFilterMembers(int page, int size, String search, MemberStatus status) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by("memberNumber").ascending());
+
+        if (search != null && !search.isBlank() && status != null) {
+            return memberRepository.searchMembersWithStatus(search, status, pageable);
+        }
+        if (search != null && !search.isBlank()) {
+            return memberRepository.searchMembers(search, pageable);
+        }
+        if (status != null) {
+            return memberRepository.findByStatus(status, pageable);
+        }
+        return memberRepository.findByDeletedFalse(pageable);
+    }
+
     // ==============================
     // READ - GET ACTIVE MEMBER BY ID
     // ==============================

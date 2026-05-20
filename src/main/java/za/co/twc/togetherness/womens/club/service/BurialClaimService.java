@@ -5,6 +5,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import za.co.twc.togetherness.womens.club.domain.BurialClaim;
@@ -109,5 +110,26 @@ public class BurialClaimService {
 
     public Page<BurialClaim> getPaginatedClaims(int page, int size, String sortBy) {
         return burialClaimRepository.findAll(PageRequest.of(page, size, Sort.by(sortBy).descending()));
+    }
+
+    public Page<BurialClaim> searchAndFilterClaims(int page, int size, String sortBy, String search, ClaimStatus status) {
+
+        LOGGER.info("Search and filter claims for page {}", page);
+
+        Pageable pageable = PageRequest.of(page, size, Sort.by(sortBy).descending());
+
+        if (search != null && !search.isBlank() && status != null) {
+            return burialClaimRepository.searchByMemberNameAndStatus(search, status, pageable);
+        }
+
+        if (search != null && !search.isBlank()) {
+            return burialClaimRepository.searchByMemberName(search, pageable);
+        }
+
+        if (status != null) {
+            return burialClaimRepository.findByStatus(status, pageable);
+        }
+
+        return burialClaimRepository.findAll(pageable);
     }
 }

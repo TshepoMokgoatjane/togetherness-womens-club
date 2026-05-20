@@ -10,6 +10,32 @@
         </a>
     </div>
 
+    <!-- SEARCH & FILTER -->
+    <form method="GET" th:action="@{/members}" class="row g-2 mb-3">
+        <div class="col-md-4">
+            <input type="text" name="search" class="form-control" placeholder="Search by name, member no, email..." th:value="${search}" />
+        </div>
+        <div class="col-md-3">
+            <select name="status" class="form-select">
+                <option value="">All Statuses</option>
+                <option value="ACTIVE" th:selected="${status != null && status.name() == 'ACTIVE'}">Active</option>
+                <option value="INACTIVE" th:selected="${status != null && status.name() == 'INACTIVE'}">Inactive</option>
+                <option value="SUSPENDED" th:selected="${status != null && status.name() == 'SUSPENDED'}">Suspended</option>
+                <option value="DECEASED" th:selected="${status != null && status.name() == 'DECEASED'}">Deceased</option>
+            </select>
+        </div>
+        <div class="col-md-2">
+            <button type="submit" class="btn btn-primary">
+                <i class="bi bi-search me-1"></i>Filter
+            </button>
+        </div>
+        <div class="col-md-2" th:if="${search != null || status != null}">
+            <a th:href="@{/members}" class="btn btn-outline-secondary">
+                <i class="bi bi-x-lg me-1"></i>Clear
+            </a>
+        </div>
+    </form>
+
     <div class="table-responsive">
         <table class="table table-striped table-hover table-bordered">
             <thead class="table-dark">
@@ -71,7 +97,28 @@
     </div>
 
     <!-- PAGINATION -->
-    <div th:replace="~{fragments/pagination :: pager('/members', ${currentPage}, ${totalPages}, ${pageSize})}"></div>
+    <nav aria-label="Page navigation" th:if="${totalPages > 1}">
+        <div class="d-flex justify-content-between align-items-center mt-3">
+            <small class="text-muted" th:text="'Showing page ' + (${currentPage} + 1) + ' of ' + ${totalPages}"></small>
+            <ul class="pagination pagination-sm mb-0">
+                <li class="page-item" th:classappend="${currentPage == 0} ? 'disabled'">
+                    <a class="page-link" th:href="@{/members(page=${currentPage - 1}, size=${pageSize}, search=${search}, status=${status})}">
+                        <i class="bi bi-chevron-left"></i>
+                    </a>
+                </li>
+                <li th:each="i : ${#numbers.sequence(0, totalPages - 1)}"
+                    class="page-item"
+                    th:classappend="${i == currentPage} ? 'active'">
+                    <a class="page-link" th:href="@{/members(page=${i}, size=${pageSize}, search=${search}, status=${status})}" th:text="${i + 1}"></a>
+                </li>
+                <li class="page-item" th:classappend="${currentPage == totalPages - 1} ? 'disabled'">
+                    <a class="page-link" th:href="@{/members(page=${currentPage + 1}, size=${pageSize}, search=${search}, status=${status})}">
+                        <i class="bi bi-chevron-right"></i>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </nav>
 
     <!-- DELETE CONFIRMATION MODAL -->
     <div class="modal fade" id="deleteConfirmModal" tabindex="-1" aria-labelledby="deleteConfirmModalLabel" aria-hidden="true">

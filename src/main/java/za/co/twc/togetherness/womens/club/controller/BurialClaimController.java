@@ -8,6 +8,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import za.co.twc.togetherness.womens.club.domain.BurialClaim;
+import za.co.twc.togetherness.womens.club.domain.ClaimStatus;
 import za.co.twc.togetherness.womens.club.exception.MemberMissedLastThreeConsecutiveMonthsException;
 import za.co.twc.togetherness.womens.club.service.BurialClaimService;
 import za.co.twc.togetherness.womens.club.service.MemberService;
@@ -31,17 +32,23 @@ public class BurialClaimController {
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size,
             @RequestParam(defaultValue = "claimDate") String sortBy,
+            @RequestParam(required = false) String search,
+            @RequestParam(required = false) ClaimStatus status,
             Model model) {
 
-        Page<BurialClaim> claimsData = burialClaimService.getPaginatedClaims(page, size, sortBy);
+        Page<BurialClaim> claimsData = burialClaimService.searchAndFilterClaims(page, size, sortBy, search, status);
 
         model.addAttribute("pageTitle", "All Burial Claims");
+
         model.addAttribute("claims", claimsData.getContent());
         model.addAttribute("currentPage", page);
         model.addAttribute("totalPages", claimsData.getTotalPages());
         model.addAttribute("totalItems", claimsData.getTotalElements());
         model.addAttribute("pageSize", size);
         model.addAttribute("sortBy", sortBy);
+
+        model.addAttribute("search", search);
+        model.addAttribute("status", status);
 
         return "claim/list";
     }

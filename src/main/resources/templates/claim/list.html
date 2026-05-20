@@ -7,25 +7,40 @@
 
     <div class="table-responsive mt-3">
 
-        <div class="mb-3">
-            <label for="claimDate" class="form-label">Sort By:</label>
+        <form method="GET" th:action="@{/claims}" class="row g-3 mb-3">
+            <div class="col-md-3">
+                <input type="text" name="search" class="form-control" placeholder="Search member..." th:value="${search}">
+            </div>
 
-            <label>
-                <select class="form-select w-auto d-inline" onchange="location = this.value;">
-
-                    <option th:value="@{/claims(sortBy='claimDate')}" id="claimDate"
-                            th:selected="${sortBy == 'claimDate'}">
-                    Claim Date
-                    </option>
-
-                    <option th:value="@{/claims(sortBy='claimAmount')}" id="amount"
-                            th:selected="${sortBy == 'claimAmount'}">
-                    Amount
-                    </option>
+            <!-- Status Filter -->
+            <div class="col-md-3">
+                <select name="status" class="form-select">
+                    <option value="">All Status</option>
+                    <option value="PENDING" th:selected="${status == 'PENDING'}">Pending</option>
+                    <option value="APPROVED" th:selected="${status == 'APPROVED'}">Approved</option>
+                    <option value="DECLINED" th:selected="${status == 'DECLINED'}">Declined</option>
                 </select>
-            </label>
-        </div>
+            </div>
 
+            <!-- Submit -->
+            <div class="col-md-2">
+                <button type="submit" class="btn btn-primary">Filter</button>
+            </div>
+        </form>
+
+        <div class="mb-3">
+            <label for="sortSelect" class="form-label">Sort By:</label>
+            <select class="form-select w-auto d-inline" id="sortSelect" onchange="location = this.value;">
+                <option th:value="@{/claims(sortBy='claimDate', search=${search}, status=${status})}"
+                        th:selected="${sortBy == 'claimDate'}">
+                    Claim Date
+                </option>
+                <option th:value="@{/claims(sortBy='claimAmount', search=${search}, status=${status})}"
+                        th:selected="${sortBy == 'claimAmount'}">
+                    Amount
+                </option>
+            </select>
+        </div>
 
         <table class="table table-striped table-hover table-bordered">
             <thead class="table-dark">
@@ -85,7 +100,28 @@
         </table>
 
         <!-- PAGINATION -->
-        <div th:replace="~{fragments/pagination :: pager('/claims', ${currentPage}, ${totalPages}, ${pageSize})}"></div>
+        <nav aria-label="Page navigation" th:if="${totalPages > 1}">
+            <div class="d-flex justify-content-between align-items-center mt-3">
+                <small class="text-muted" th:text="'Showing page ' + (${currentPage} + 1) + ' of ' + ${totalPages}"></small>
+                <ul class="pagination pagination-sm mb-0">
+                    <li class="page-item" th:classappend="${currentPage == 0} ? 'disabled'">
+                        <a class="page-link" th:href="@{/claims(page=${currentPage - 1}, size=${pageSize}, sortBy=${sortBy}, search=${search}, status=${status})}">
+                            <i class="bi bi-chevron-left"></i>
+                        </a>
+                    </li>
+                    <li th:each="i : ${#numbers.sequence(0, totalPages - 1)}"
+                        class="page-item"
+                        th:classappend="${i == currentPage} ? 'active'">
+                        <a class="page-link" th:href="@{/claims(page=${i}, size=${pageSize}, sortBy=${sortBy}, search=${search}, status=${status})}" th:text="${i + 1}"></a>
+                    </li>
+                    <li class="page-item" th:classappend="${currentPage == totalPages - 1} ? 'disabled'">
+                        <a class="page-link" th:href="@{/claims(page=${currentPage + 1}, size=${pageSize}, sortBy=${sortBy}, search=${search}, status=${status})}">
+                            <i class="bi bi-chevron-right"></i>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </nav>
     </div>
 
     <!-- CLAIM ACTION CONFIRMATION MODAL -->

@@ -35,9 +35,11 @@ public class ContributionController {
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size,
             @RequestParam(defaultValue = "paymentDate") String sortBy,
+            @RequestParam(required = false) String search,
+            @RequestParam(required = false) za.co.twc.togetherness.womens.club.domain.ContributionStatus status,
             Model model) {
 
-        Page<Contribution> pageData = contributionService.getPaginationContributions(page, size, sortBy);
+        Page<Contribution> pageData = contributionService.searchAndFilterContributions(page, size, sortBy, search, status);
 
         model.addAttribute("pageTitle", "All Contributions");
         model.addAttribute("contributions", pageData.getContent());
@@ -46,6 +48,8 @@ public class ContributionController {
         model.addAttribute("totalItems", pageData.getTotalElements());
         model.addAttribute("pageSize", size);
         model.addAttribute("sortBy", sortBy);
+        model.addAttribute("search", search);
+        model.addAttribute("status", status);
 
         return "contribution/all";
     }

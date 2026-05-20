@@ -3,6 +3,8 @@ package za.co.twc.togetherness.womens.club.repository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import za.co.twc.togetherness.womens.club.domain.Contribution;
 import za.co.twc.togetherness.womens.club.domain.ContributionStatus;
 
@@ -20,4 +22,21 @@ public interface ContributionRepository extends JpaRepository<Contribution, Long
     List<Contribution> findByContributionMonthAndStatus(YearMonth month, ContributionStatus status);
 
     Page<Contribution> findAllByOrderByPaymentDateDesc(Pageable pageable);
+
+    @Query("SELECT c FROM Contribution c WHERE " +
+           "(LOWER(c.member.firstName) LIKE LOWER(CONCAT('%', :search, '%')) " +
+           "OR LOWER(c.member.lastName) LIKE LOWER(CONCAT('%', :search, '%')) " +
+           "OR LOWER(c.member.memberNumber) LIKE LOWER(CONCAT('%', :search, '%')) " +
+           "OR LOWER(c.reference) LIKE LOWER(CONCAT('%', :search, '%')))")
+    Page<Contribution> searchContributions(@Param("search") String search, Pageable pageable);
+
+    Page<Contribution> findByStatus(ContributionStatus status, Pageable pageable);
+
+    @Query("SELECT c FROM Contribution c WHERE " +
+           "(LOWER(c.member.firstName) LIKE LOWER(CONCAT('%', :search, '%')) " +
+           "OR LOWER(c.member.lastName) LIKE LOWER(CONCAT('%', :search, '%')) " +
+           "OR LOWER(c.member.memberNumber) LIKE LOWER(CONCAT('%', :search, '%')) " +
+           "OR LOWER(c.reference) LIKE LOWER(CONCAT('%', :search, '%'))) " +
+           "AND c.status = :status")
+    Page<Contribution> searchContributionsWithStatus(@Param("search") String search, @Param("status") ContributionStatus status, Pageable pageable);
 }
