@@ -4,6 +4,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import za.co.twc.togetherness.womens.club.domain.Dependent;
@@ -40,6 +44,12 @@ public class MemberService {
     @Transactional(readOnly = true)
     public List<Member> getAllActiveMembers() {
         return memberRepository.findByDeletedFalse();
+    }
+
+    @Transactional(readOnly = true)
+    public Page<Member> getActiveMembersPaginated(int page, int size) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by("memberNumber").ascending());
+        return memberRepository.findByDeletedFalse(pageable);
     }
 
     // ==============================

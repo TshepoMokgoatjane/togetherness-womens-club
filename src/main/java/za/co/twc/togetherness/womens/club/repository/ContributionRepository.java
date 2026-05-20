@@ -1,5 +1,7 @@
 package za.co.twc.togetherness.womens.club.repository;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import za.co.twc.togetherness.womens.club.domain.Contribution;
 import za.co.twc.togetherness.womens.club.domain.ContributionStatus;
@@ -16,4 +18,6 @@ public interface ContributionRepository extends JpaRepository<Contribution, Long
     boolean existsByMemberIdAndContributionMonth(Long memberId, YearMonth currentMonth);
 
     List<Contribution> findByContributionMonthAndStatus(YearMonth month, ContributionStatus status);
+
+    Page<Contribution> findAllByOrderByPaymentDateDesc(Pageable pageable);
 }

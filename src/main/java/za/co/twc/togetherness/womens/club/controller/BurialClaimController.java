@@ -1,6 +1,7 @@
 package za.co.twc.togetherness.womens.club.controller;
 
 import jakarta.validation.Valid;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -26,9 +27,22 @@ public class BurialClaimController {
     // ALL CLAIMS
     // ==================
     @GetMapping("/claims")
-    public String listAll(Model model) {
+    public String listAll(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "claimDate") String sortBy,
+            Model model) {
+
+        Page<BurialClaim> claimsData = burialClaimService.getPaginatedClaims(page, size, sortBy);
+
         model.addAttribute("pageTitle", "All Burial Claims");
-        model.addAttribute("claims", burialClaimService.getAllClaims());
+        model.addAttribute("claims", claimsData.getContent());
+        model.addAttribute("currentPage", page);
+        model.addAttribute("totalPages", claimsData.getTotalPages());
+        model.addAttribute("totalItems", claimsData.getTotalElements());
+        model.addAttribute("pageSize", size);
+        model.addAttribute("sortBy", sortBy);
+
         return "claim/list";
     }
 

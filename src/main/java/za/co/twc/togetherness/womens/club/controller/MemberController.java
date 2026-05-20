@@ -33,8 +33,15 @@ public class MemberController {
     // LIST
     // ==================
     @GetMapping
-    public String listMembers(Model model) {
-        model.addAttribute("members", memberService.getAllActiveMembers());
+    public String listMembers(@RequestParam(defaultValue = "0") int page,
+                              @RequestParam(defaultValue = "10") int size,
+                              Model model) {
+        var membersPage = memberService.getActiveMembersPaginated(page, size);
+        model.addAttribute("members", membersPage.getContent());
+        model.addAttribute("currentPage", page);
+        model.addAttribute("totalPages", membersPage.getTotalPages());
+        model.addAttribute("totalItems", membersPage.getTotalElements());
+        model.addAttribute("pageSize", size);
         return "member/list";
     }
 

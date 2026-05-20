@@ -70,6 +70,9 @@
         </table>
     </div>
 
+    <!-- PAGINATION -->
+    <div th:replace="~{fragments/pagination :: pager('/members', ${currentPage}, ${totalPages}, ${pageSize})}"></div>
+
     <!-- DELETE CONFIRMATION MODAL -->
     <div class="modal fade" id="deleteConfirmModal" tabindex="-1" aria-labelledby="deleteConfirmModalLabel" aria-hidden="true">
         <div class="modal-dialog">

@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<div th:fragment="pager(baseUrl, currentPage, totalPages, pageSize)">
+    <nav aria-label="Page navigation" th:if="${totalPages > 1}">
+        <div class="d-flex justify-content-between align-items-center mt-3">
+            <small class="text-muted" th:text="'Showing page ' + (${currentPage} + 1) + ' of ' + ${totalPages}"></small>
+            <ul class="pagination pagination-sm mb-0">
+                <!-- Previous -->
+                <li class="page-item" th:classappend="${currentPage == 0} ? 'disabled'">
+                    <a class="page-link" th:href="@{${baseUrl}(page=${currentPage - 1}, size=${pageSize})}">
+                        <i class="bi bi-chevron-left"></i>
+                    </a>
+                </li>
+
+                <!-- Page numbers -->
+                <li th:each="i : ${#numbers.sequence(0, totalPages - 1)}"
+                    class="page-item"
+                    th:classappend="${i == currentPage} ? 'active'">
+                    <a class="page-link" th:href="@{${baseUrl}(page=${i}, size=${pageSize})}" th:text="${i + 1}"></a>
+                </li>
+
+                <!-- Next -->
+                <li class="page-item" th:classappend="${currentPage == totalPages - 1} ? 'disabled'">
+                    <a class="page-link" th:href="@{${baseUrl}(page=${currentPage + 1}, size=${pageSize})}">
+                        <i class="bi bi-chevron-right"></i>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+</div>
+
+</html>

@@ -2,6 +2,7 @@ package za.co.twc.togetherness.womens.club.controller;
 
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -30,9 +31,22 @@ public class ContributionController {
     // ALL CONTRIBUTIONS
     // ==================
     @GetMapping("/contributions")
-    public String listAll(Model model) {
+    public String listAll(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "paymentDate") String sortBy,
+            Model model) {
+
+        Page<Contribution> pageData = contributionService.getPaginationContributions(page, size, sortBy);
+
         model.addAttribute("pageTitle", "All Contributions");
-        model.addAttribute("contributions", contributionService.getAllContributions());
+        model.addAttribute("contributions", pageData.getContent());
+        model.addAttribute("currentPage", page);
+        model.addAttribute("totalPages", pageData.getTotalPages());
+        model.addAttribute("totalItems", pageData.getTotalElements());
+        model.addAttribute("pageSize", size);
+        model.addAttribute("sortBy", sortBy);
+
         return "contribution/all";
     }
 

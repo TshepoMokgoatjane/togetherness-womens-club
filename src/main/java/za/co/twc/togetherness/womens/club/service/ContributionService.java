@@ -4,6 +4,9 @@ import jakarta.transaction.Transactional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import za.co.twc.togetherness.womens.club.domain.Contribution;
 import za.co.twc.togetherness.womens.club.domain.ContributionStatus;
@@ -172,5 +175,9 @@ public class ContributionService {
             data.put(month.toString(), total);
         }
         return data;
+    }
+
+    public Page<Contribution> getPaginationContributions(int page, int size, String sortBy) {
+        return contributionRepository.findAll(PageRequest.of(page, size, Sort.by(sortBy).descending()));
     }
 }
