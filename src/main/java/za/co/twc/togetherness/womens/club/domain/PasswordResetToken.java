@@ -5,23 +5,22 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@Entity
-@Table(name = "users")
+import java.time.LocalDateTime;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class User {
+@Entity
+public class PasswordResetToken {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String username;
-    private String password;
-    private String role; // ADMIN, TREASURER, USER
+    private String token;
 
-    private String email;
+    private LocalDateTime expiryDate;
 
-    @Column(name = "member_id")
-    private Long memberId;
+    @ManyToOne
+    private User user;
 }
