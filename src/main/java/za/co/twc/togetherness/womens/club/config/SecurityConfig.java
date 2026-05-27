@@ -31,7 +31,17 @@ public class SecurityConfig {
                         .contentSecurityPolicy(csp -> csp
                                 .policyDirectives("default-src 'self'; style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; font-src 'self' https://cdn.jsdelivr.net; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdn.jsdelivr.net; img-src 'self' data:; connect-src 'self' https://cdn.jsdelivr.net;")
                         )
-                );
+                )
+                .sessionManagement(session -> session
+                        .sessionFixation().migrateSession()
+                        .maximumSessions(1) // Allow only 1 active session
+                        .maxSessionsPreventsLogin(false) // Kicks the old session instead of blocking new login
+                )
+                .rememberMe(remember -> remember
+                        .key("secure-remember-me-key")
+                        .tokenValiditySeconds(7 * 24 * 60 * 60) // 7 days
+                )
+        ;
 
         return http.build();
     }
