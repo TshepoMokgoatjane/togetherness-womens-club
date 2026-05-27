@@ -1,17 +1,13 @@
 package za.co.twc.togetherness.womens.club.service;
 
-import org.jspecify.annotations.NonNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.mail.SimpleMailMessage;
-import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import za.co.twc.togetherness.womens.club.domain.PasswordResetToken;
 import za.co.twc.togetherness.womens.club.domain.User;
 import za.co.twc.togetherness.womens.club.exception.EmailTokenExpiredException;
-import za.co.twc.togetherness.womens.club.exception.FailedToSendPasswordResetEmailException;
 import za.co.twc.togetherness.womens.club.exception.InvalidEmailTokenException;
 import za.co.twc.togetherness.womens.club.repository.PasswordResetTokenRepository;
 import za.co.twc.togetherness.womens.club.repository.UserRepository;
@@ -27,17 +23,17 @@ public class PasswordResetService {
 
     private final PasswordResetTokenRepository passwordResetTokenRepository;
     private final UserRepository userRepository;
-    private final JavaMailSender javaMailSender;
+    private final EmailService emailService;
 
     @Value("${app.base-url:http://localhost:8080}")
     private String baseUrl;
 
     public PasswordResetService(PasswordResetTokenRepository passwordResetTokenRepository,
                                 UserRepository userRepository,
-                                JavaMailSender javaMailSender) {
+                                EmailService emailService) {
         this.passwordResetTokenRepository = passwordResetTokenRepository;
         this.userRepository = userRepository;
-        this.javaMailSender = javaMailSender;
+        this.emailService = emailService;
     }
 
     public void createPasswordResetToken(String email) {
@@ -67,28 +63,20 @@ public class PasswordResetService {
     private void sendResetEmail(String email, String token) {
         LOGGER.info("Sending password reset email to {}", email);
 
-        SimpleMailMessage message = getSimpleMailMessage(email, token);
+        String resetUrl = baseUrl + "/reset-password?token=" + token;
+        String subject = "Togetherness Women's Club - Password Reset";
+        String body = "Hello,\n\nYou requested a password reset. Click the link below to reset your password:\n\n"
+                + resetUrl
+                + "\n\nThis link expires in 30 minutes.\n\nIf you did not request this, please ignore this email.\n\n"
+                + "Togetherness Women's Club";
 
         try {
-            javaMailSender.send(message);
+            emailService.sendEmail(email, subject, body);
             LOGGER.info("Password reset email sent successfully to {}", email);
         } catch (Exception e) {
             LOGGER.error("Failed to send password reset email to {}: {}", email, e.getMessage());
-            throw new FailedToSendPasswordResetEmailException(e.getMessage());
+            throw new RuntimeException("Unable to send password reset email. Please try again later.", e);
         }
-    }
-
-    private @NonNull SimpleMailMessage getSimpleMailMessage(String email, String token) {
-        String resetUrl = baseUrl + "/reset-password?token=" + token;
-
-        SimpleMailMessage message = new SimpleMailMessage();
-        message.setTo(email);
-        message.setSubject("Togetherness Women's Club - Password Reset");
-        message.setText("Hello,\n\nYou requested a password reset. Click the link below to reset your password:\n\n"
-                + resetUrl
-                + "\n\nThis link expires in 30 minutes.\n\nIf you did not request this, please ignore this email.\n\n"
-                + "Togetherness Women's Club");
-        return message;
     }
 
     public PasswordResetToken validateToken(String token) {
