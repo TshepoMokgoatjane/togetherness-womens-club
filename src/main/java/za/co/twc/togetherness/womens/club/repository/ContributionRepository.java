@@ -15,7 +15,7 @@ public interface ContributionRepository extends JpaRepository<Contribution, Long
 
     List<Contribution> findByMemberId(Long memberId);
 
-    List<Contribution> findAllByOrderByPaymentDateDesc();
+    Page<Contribution> findAllByOrderByPaymentDateDesc();
 
     boolean existsByMemberIdAndContributionMonth(Long memberId, YearMonth currentMonth);
 
@@ -39,4 +39,6 @@ public interface ContributionRepository extends JpaRepository<Contribution, Long
            "OR LOWER(c.reference) LIKE LOWER(CONCAT('%', :search, '%'))) " +
            "AND c.status = :status")
     Page<Contribution> searchContributionsWithStatus(@Param("search") String search, @Param("status") ContributionStatus status, Pageable pageable);
+
+    boolean existsByMemberIdAndContributionMonthAndStatus(Long memberId, YearMonth contributionMonth, ContributionStatus contributionStatus);
 }

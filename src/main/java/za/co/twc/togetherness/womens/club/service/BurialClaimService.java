@@ -8,6 +8,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import za.co.twc.togetherness.womens.club.domain.BurialClaim;
 import za.co.twc.togetherness.womens.club.domain.ClaimStatus;
 import za.co.twc.togetherness.womens.club.domain.ContributionStatus;
@@ -47,16 +48,14 @@ public class BurialClaimService {
         return burialClaimRepository.findByMemberId(memberId);
     }
 
-    public boolean hasPaidLast3ConsecutiveMonths(Member member) {
+    public boolean isEligibleForClaim(Member member) {
 
         YearMonth now = YearMonth.now();
 
         for (int i = 1; i <= 3; i++) {
             YearMonth checkMonth = now.minusMonths(i);
 
-            boolean paid = contributionRepository.findByContributionMonthAndStatus(checkMonth, ContributionStatus.PAID)
-                    .stream()
-                    .anyMatch(contribution -> contribution.getMember().getId().equals(member.getId()));
+            boolean paid = contributionRepository.existsByMemberIdAndContributionMonthAndStatus(member.getId(), checkMonth, ContributionStatus.PAID);
 
             if (!paid) {
                 return false;
@@ -65,13 +64,14 @@ public class BurialClaimService {
         return true;
     }
 
+    @Transactional
     public BurialClaim createClaim(Long memberId, BurialClaim burialClaim) {
 
-        LOGGER.info("Creating claim with id {}", burialClaim.getId());
+        LOGGER.info("Creating claim with for member {}", memberId);
 
         Member member = memberService.getActiveMemberById(memberId);
 
-        if (!hasPaidLast3ConsecutiveMonths(member)) {
+        if (!isEligibleForClaim(member)) {
             LOGGER.info("Member with ID {} not eligible for claim/payout, member missed last 3 consecutive months", member.getId());
             throw new MemberMissedLastThreeConsecutiveMonthsException(member);
         }
@@ -109,7 +109,8 @@ public class BurialClaimService {
     }
 
     public Page<BurialClaim> getPaginatedClaims(int page, int size, String sortBy) {
-        return burialClaimRepository.findAll(PageRequest.of(page, size, Sort.by(sortBy).descending()));
+        Pageable pageable = PageRequest.of(page, size, Sort.by(sortBy).descending());
+        return burialClaimRepository.findAll(pageable);
     }
 
     public Page<BurialClaim> searchAndFilterClaims(int page, int size, String sortBy, String search, ClaimStatus status) {

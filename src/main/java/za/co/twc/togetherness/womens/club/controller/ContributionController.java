@@ -86,7 +86,16 @@ public class ContributionController {
             return "contribution/new";
         }
 
-        contributionService.createContribution(memberId, contribution);
+        try {
+            contributionService.createContribution(memberId, contribution);
+        } catch (DuplicateMonthlyContributionException | NonActiveMemberContributionException |
+                 InvalidContributionAmountException ex) {
+            model.addAttribute("members", memberService.getAllActiveMembers());
+            model.addAttribute("selectedMemberId", memberId);
+            model.addAttribute("errorMessage", ex.getMessage());
+            return "contribution/new";
+        }
+
         redirectAttributes.addFlashAttribute("successMessage", "Contribution recorded successfully!");
         return "redirect:/contributions";
     }
@@ -126,34 +135,17 @@ public class ContributionController {
             return "contribution/form";
         }
 
-        contributionService.createContribution(memberId, contribution);
+        try {
+            contributionService.createContribution(memberId, contribution);
+        } catch (DuplicateMonthlyContributionException | NonActiveMemberContributionException |
+                 InvalidContributionAmountException ex) {
+            model.addAttribute("member", memberService.getActiveMemberById(memberId));
+            model.addAttribute("errorMessage", ex.getMessage());
+            return "contribution/form";
+        }
+
         redirectAttributes.addFlashAttribute("successMessage", "Contribution recorded successfully!");
         return "redirect:/members/" + memberId + "/contributions";
     }
 
-    // ==================
-    // EXCEPTION HANDLING
-    // ==================
-    @ExceptionHandler(DuplicateMonthlyContributionException.class)
-    public String handleDuplicateContribution(DuplicateMonthlyContributionException ex,
-                                              RedirectAttributes redirectAttributes,
-                                              jakarta.servlet.http.HttpServletRequest request) {
-        redirectAttributes.addFlashAttribute("errorMessage", ex.getMessage());
-        String referer = request.getHeader("Referer");
-        return "redirect:" + (referer != null ? referer : "/contributions");
-    }
-
-    @ExceptionHandler(NonActiveMemberContributionException.class)
-    public String handleNonActiveMember(NonActiveMemberContributionException ex,
-                                        RedirectAttributes redirectAttributes) {
-        redirectAttributes.addFlashAttribute("errorMessage", ex.getMessage());
-        return "redirect:/contributions/new";
-    }
-
-    @ExceptionHandler(InvalidContributionAmountException.class)
-    public String handleInvalidAmount(InvalidContributionAmountException ex,
-                                      RedirectAttributes redirectAttributes) {
-        redirectAttributes.addFlashAttribute("errorMessage", ex.getMessage());
-        return "redirect:/contributions/new";
-    }
 }

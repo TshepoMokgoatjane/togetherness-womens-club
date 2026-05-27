@@ -90,7 +90,7 @@ public class ContributionService {
         return memberContributed;
     }
 
-    public List<Contribution> getAllContributions() {
+    public Page<Contribution> getAllContributions() {
         LOGGER.info("Get all contributions");
         return contributionRepository.findAllByOrderByPaymentDateDesc();
     }

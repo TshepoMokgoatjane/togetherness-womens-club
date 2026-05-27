@@ -54,7 +54,12 @@ public class DependentController {
             return "dependent/form";
         }
 
-        dependentService.createDependent(memberId, dependent);
+        try {
+            dependentService.createDependent(memberId, dependent);
+        } catch (DuplicateDependentException ex) {
+            redirectAttributes.addFlashAttribute("errorMessage", ex.getMessage());
+            return "redirect:/members/" + memberId + "/dependents/new";
+        }
 
         redirectAttributes.addFlashAttribute("successMessage", "Dependent created successfully!");
 
@@ -68,18 +73,4 @@ public class DependentController {
         return "redirect:/members/" + memberId + "/dependents";
     }
 
-    @ExceptionHandler(DuplicateDependentException.class)
-    public String handleDuplicateDependentException(
-            DuplicateDependentException ex,
-            RedirectAttributes redirectAttributes,
-            jakarta.servlet.http.HttpServletRequest request) {
-
-        // Extract memberId from the request URI (e.g., /members/1/dependents)
-        String uri = request.getRequestURI();
-        String memberId = uri.split("/members/")[1].split("/")[0];
-
-        redirectAttributes.addFlashAttribute("errorMessage", ex.getMessage());
-
-        return "redirect:/members/" + memberId + "/dependents/new";
-    }
 }

@@ -81,7 +81,15 @@ public class BurialClaimController {
             return "claim/new";
         }
 
-        burialClaimService.createClaim(memberId, burialClaim);
+        try {
+            burialClaimService.createClaim(memberId, burialClaim);
+        } catch (MemberMissedLastThreeConsecutiveMonthsException ex) {
+            model.addAttribute("members", memberService.getAllActiveMembers());
+            model.addAttribute("selectedMemberId", memberId);
+            model.addAttribute("errorMessage", ex.getMessage());
+            return "claim/new";
+        }
+
         redirectAttributes.addFlashAttribute("successMessage", "Burial claim submitted successfully!");
         return "redirect:/claims";
     }
@@ -109,7 +117,14 @@ public class BurialClaimController {
             return "claim/form";
         }
 
-        burialClaimService.createClaim(memberId, burialClaim);
+        try {
+            burialClaimService.createClaim(memberId, burialClaim);
+        } catch (MemberMissedLastThreeConsecutiveMonthsException ex) {
+            model.addAttribute("member", memberService.getActiveMemberById(memberId));
+            model.addAttribute("errorMessage", ex.getMessage());
+            return "claim/form";
+        }
+
         redirectAttributes.addFlashAttribute("successMessage", "Burial claim submitted successfully!");
         return "redirect:/members/" + memberId;
     }
@@ -129,18 +144,5 @@ public class BurialClaimController {
         burialClaimService.declineClaim(claimId);
         redirectAttributes.addFlashAttribute("errorMessage", "Claim has been declined.");
         return "redirect:/claims";
-    }
-
-    // ==================
-    // EXCEPTION HANDLING
-    // ==================
-    @ExceptionHandler(MemberMissedLastThreeConsecutiveMonthsException.class)
-    public String handleIneligible(MemberMissedLastThreeConsecutiveMonthsException ex,
-                                   RedirectAttributes redirectAttributes,
-                                   jakarta.servlet.http.HttpServletRequest request) {
-        redirectAttributes.addFlashAttribute("errorMessage", "Claim declined: Member has not paid the last 3 consecutive months.");
-        String uri = request.getRequestURI();
-        String memberId = uri.split("/members/")[1].split("/")[0];
-        return "redirect:/members/" + memberId;
     }
 }
