@@ -37,6 +37,12 @@
                         You have been logged out successfully.
                     </div>
 
+                    <!-- SESSION EXPIRED -->
+                    <div th:if="${param.expired}" class="alert alert-warning alert-sm" role="alert">
+                        <i class="bi bi-exclamation-triangle me-1"></i>
+                        Your session has expired. You may have logged in from another device.
+                    </div>
+
                     <!-- REGISTRATION SUCCESS -->
                     <div th:if="${successMessage}" class="alert alert-success alert-sm" role="alert">
                         <i class="bi bi-check-circle me-1"></i>

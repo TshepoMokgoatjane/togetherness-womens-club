@@ -36,6 +36,7 @@ public class SecurityConfig {
                         .sessionFixation().migrateSession()
                         .maximumSessions(1) // Allow only 1 active session
                         .maxSessionsPreventsLogin(false) // Kicks the old session instead of blocking new login
+                        .expiredUrl("/login?expired") // Redirect to login with message
                 )
                 .rememberMe(remember -> remember
                         .key("secure-remember-me-key")
