@@ -40,6 +40,6 @@ public interface ContributionRepository extends JpaRepository<Contribution, Long
 
     boolean existsByMemberIdAndContributionMonthAndStatus(Long memberId, YearMonth contributionMonth, ContributionStatus contributionStatus);
 
-    @Query("SELECT COUNT(c) FROM Contributions c WHERE c.member.id = :memberId AND c.status = :status AND c.contributionMonth IN :months")
+    @Query("SELECT COUNT(c) FROM Contribution c WHERE c.member.id = :memberId AND c.status = :status AND c.contributionMonth IN :months")
     long countPaidMonths(@Param("memberId") Long id, @Param("status") ContributionStatus contributionStatus, @Param("months") List<YearMonth> last3Months);
 }
