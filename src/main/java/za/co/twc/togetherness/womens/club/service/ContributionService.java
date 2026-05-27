@@ -90,11 +90,6 @@ public class ContributionService {
         return memberContributed;
     }
 
-    public Page<Contribution> getAllContributions() {
-        LOGGER.info("Get all contributions");
-        return contributionRepository.findAllByOrderByPaymentDateDesc();
-    }
-
     public List<Contribution> getContributionsByMemberId(Long memberId) {
 
         LOGGER.info("Get Contributions by member Id {}", memberId);
