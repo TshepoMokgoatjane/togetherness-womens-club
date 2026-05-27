@@ -15,8 +15,6 @@ public interface ContributionRepository extends JpaRepository<Contribution, Long
 
     List<Contribution> findByMemberId(Long memberId);
 
-    Page<Contribution> findAllByOrderByPaymentDateDesc();
-
     boolean existsByMemberIdAndContributionMonth(Long memberId, YearMonth currentMonth);
 
     List<Contribution> findByContributionMonthAndStatus(YearMonth month, ContributionStatus status);
