@@ -39,4 +39,7 @@ public interface ContributionRepository extends JpaRepository<Contribution, Long
     Page<Contribution> searchContributionsWithStatus(@Param("search") String search, @Param("status") ContributionStatus status, Pageable pageable);
 
     boolean existsByMemberIdAndContributionMonthAndStatus(Long memberId, YearMonth contributionMonth, ContributionStatus contributionStatus);
+
+    @Query("SELECT COUNT(c) FROM Contributions c WHERE c.member.id = :memberId AND c.status = :status AND c.contributionMonth IN :months")
+    long countPaidMonths(@Param("memberId") Long id, @Param("status") ContributionStatus contributionStatus, @Param("months") List<YearMonth> last3Months);
 }

@@ -19,6 +19,7 @@ import za.co.twc.togetherness.womens.club.repository.ContributionRepository;
 
 import java.time.LocalDate;
 import java.time.YearMonth;
+import java.util.List;
 
 @Service
 public class BurialClaimService {
@@ -52,16 +53,15 @@ public class BurialClaimService {
 
         YearMonth now = YearMonth.now();
 
-        for (int i = 1; i <= 3; i++) {
-            YearMonth checkMonth = now.minusMonths(i);
+        List<YearMonth> last3Months = List.of(
+                now.minusMonths(1),
+                now.minusMonths(2),
+                now.minusMonths(3)
+        );
 
-            boolean paid = contributionRepository.existsByMemberIdAndContributionMonthAndStatus(member.getId(), checkMonth, ContributionStatus.PAID);
+        long count = contributionRepository.countPaidMonths(member.getId(), ContributionStatus.PAID,last3Months);
 
-            if (!paid) {
-                return false;
-            }
-        }
-        return true;
+        return count == 3;
     }
 
     @Transactional

@@ -14,7 +14,10 @@ import java.time.LocalDate;
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "burial_claims")
+@Table(name = "burial_claims", indexes = {
+        @Index(name = "idx_claim_member", columnList = "member_id"),
+        @Index(name = "idx_claim_status", columnList = "status")
+})
 public class BurialClaim {
 
     @Id

@@ -14,7 +14,9 @@ import java.time.YearMonth;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "contributions")
+@Table(name = "contributions", indexes = {
+        @Index(name = "idx_contribution_member_month_status", columnList = "member_id, contributionMonth, status")
+})
 public class Contribution {
 
     @Id
