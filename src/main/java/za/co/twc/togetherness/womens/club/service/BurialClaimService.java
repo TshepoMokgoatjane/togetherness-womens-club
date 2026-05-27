@@ -3,6 +3,7 @@ package za.co.twc.togetherness.womens.club.service;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -13,6 +14,7 @@ import za.co.twc.togetherness.womens.club.domain.BurialClaim;
 import za.co.twc.togetherness.womens.club.domain.ClaimStatus;
 import za.co.twc.togetherness.womens.club.domain.ContributionStatus;
 import za.co.twc.togetherness.womens.club.domain.Member;
+import za.co.twc.togetherness.womens.club.event.ClaimStatusChangedEvent;
 import za.co.twc.togetherness.womens.club.exception.MemberMissedLastThreeConsecutiveMonthsException;
 import za.co.twc.togetherness.womens.club.repository.BurialClaimRepository;
 import za.co.twc.togetherness.womens.club.repository.ContributionRepository;
@@ -32,11 +34,17 @@ public class BurialClaimService {
 
     private final MemberService memberService;
 
+    private final ApplicationEventPublisher applicationEventPublisher;
+
     @Autowired
-    public BurialClaimService(BurialClaimRepository burialClaimRepository, ContributionRepository contributionRepository, MemberService memberService) {
+    public BurialClaimService(BurialClaimRepository burialClaimRepository,
+                              ContributionRepository contributionRepository,
+                              MemberService memberService,
+                              ApplicationEventPublisher applicationEventPublisher) {
         this.burialClaimRepository = burialClaimRepository;
         this.contributionRepository = contributionRepository;
         this.memberService = memberService;
+        this.applicationEventPublisher = applicationEventPublisher;
     }
 
     public java.util.List<BurialClaim> getAllClaims() {
@@ -94,6 +102,9 @@ public class BurialClaimService {
         BurialClaim saved = burialClaimRepository.save(claim);
 
         LOGGER.info("Claim {} approved for member {}", claimId, claim.getMember().getMemberNumber());
+
+        applicationEventPublisher.publishEvent(new ClaimStatusChangedEvent(claim, ClaimStatus.APPROVED));
+
         return saved;
     }
 
@@ -105,6 +116,9 @@ public class BurialClaimService {
         BurialClaim saved = burialClaimRepository.save(claim);
 
         LOGGER.info("Claim {} declined for member {}", claimId, claim.getMember().getMemberNumber());
+
+        applicationEventPublisher.publishEvent(new ClaimStatusChangedEvent(claim, ClaimStatus.DECLINED));
+
         return saved;
     }
 
