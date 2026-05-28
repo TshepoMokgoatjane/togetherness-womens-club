@@ -43,7 +43,7 @@ public class ExcelExportService {
             row.createCell(0).setCellValue(rowNum);
             row.createCell(1).setCellValue(c.getMember().getMemberNumber());
             row.createCell(2).setCellValue(c.getMember().getFirstName() + " " + c.getMember().getLastName());
-            row.createCell(3).setCellValue(c.getAmount().doubleValue());
+            row.createCell(3).setCellValue(c.getAmount() != null ? c.getAmount().doubleValue() : 0.0);
             row.createCell(4).setCellValue(c.getPaymentDate() != null ? c.getPaymentDate().toString() : "-");
             row.createCell(5).setCellValue(c.getReference() != null ? c.getReference() : "-");
             row.createCell(6).setCellValue(c.getStatus().name());
