@@ -6,13 +6,16 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import za.co.twc.togetherness.womens.club.filter.RateLimitingFilter;
 
 @Configuration
 public class SecurityConfig {
 
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain securityFilterChain(HttpSecurity http, RateLimitingFilter rateLimitingFilter) throws Exception {
         http
+                .addFilterBefore(rateLimitingFilter, UsernamePasswordAuthenticationFilter.class)
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/login", "/register", "/forgot-password/**", "/reset-password/**", "/css/**", "/js/**", "/images/**").permitAll()
                         .requestMatchers("/profile/**", "/home", "/my/**").hasAnyRole("ADMIN", "TREASURER", "USER")
@@ -34,15 +37,14 @@ public class SecurityConfig {
                 )
                 .sessionManagement(session -> session
                         .sessionFixation().migrateSession()
-                        .maximumSessions(1) // Allow only 1 active session
-                        .maxSessionsPreventsLogin(false) // Kicks the old session instead of blocking new login
-                        .expiredUrl("/login?expired") // Redirect to login with message
+                        .maximumSessions(1)
+                        .maxSessionsPreventsLogin(false)
+                        .expiredUrl("/login?expired")
                 )
                 .rememberMe(remember -> remember
                         .key("secure-remember-me-key")
-                        .tokenValiditySeconds(7 * 24 * 60 * 60) // 7 days
-                )
-        ;
+                        .tokenValiditySeconds(7 * 24 * 60 * 60)
+                );
 
         return http.build();
     }

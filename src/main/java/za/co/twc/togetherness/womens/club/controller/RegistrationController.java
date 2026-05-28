@@ -1,5 +1,7 @@
 package za.co.twc.togetherness.womens.club.controller;
 
+import io.github.bucket4j.Bucket;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
@@ -13,6 +15,10 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import za.co.twc.togetherness.womens.club.domain.RegistrationForm;
 import za.co.twc.togetherness.womens.club.domain.User;
 import za.co.twc.togetherness.womens.club.repository.UserRepository;
+import za.co.twc.togetherness.womens.club.service.RateLimiterService;
+import za.co.twc.togetherness.womens.club.utilities.RequestUtils;
+
+import java.time.Duration;
 
 @Controller
 @RequestMapping("/register")
@@ -20,10 +26,12 @@ public class RegistrationController {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final RateLimiterService rateLimiterService;
 
-    public RegistrationController(UserRepository userRepository, PasswordEncoder passwordEncoder) {
+    public RegistrationController(UserRepository userRepository, PasswordEncoder passwordEncoder, RateLimiterService rateLimiterService) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
+        this.rateLimiterService = rateLimiterService;
     }
 
     @GetMapping
@@ -35,7 +43,17 @@ public class RegistrationController {
     @PostMapping
     public String register(@Valid @ModelAttribute("registrationForm") RegistrationForm form,
                            BindingResult result,
-                           RedirectAttributes redirectAttributes) {
+                           RedirectAttributes redirectAttributes,
+                           HttpServletRequest request) {
+
+        String ip = RequestUtils.getClientIP(request);
+
+        Bucket bucket = rateLimiterService.resolveBucket("register_" + ip, 3, 3, Duration.ofMinutes(1));
+
+        if (!bucket.tryConsume(1)) {
+            result.reject("rate.limit", "Too many registrations. Please wait...");
+            return "register";
+        }
 
         // Check passwords match
         if (!form.getPassword().equals(form.getConfirmPassword())) {
