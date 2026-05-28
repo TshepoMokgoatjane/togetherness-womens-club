@@ -4,7 +4,17 @@
 <div th:fragment="content">
 
     <h2><i class="bi bi-bar-chart me-2"></i>Monthly Contribution Report</h2>
-    <p class="text-muted" th:text="'Report for: ' + ${T(java.time.YearMonth).now().toString()}"></p>
+    <div class="d-flex justify-content-between align-items-center">
+        <p class="text-muted mb-0" th:text="'Report for: ' + ${T(java.time.YearMonth).now().toString()}"></p>
+        <div>
+            <a th:href="@{/reports/export/pdf}" class="btn btn-danger btn-sm">
+                <i class="bi bi-file-pdf me-1"></i>Export PDF
+            </a>
+            <a th:href="@{/reports/export/excel}" class="btn btn-success btn-sm">
+                <i class="bi bi-file-excel me-1"></i>Export Excel
+            </a>
+        </div>
+    </div>
 
     <!-- SUMMARY CARDS -->
     <div class="row mt-4 g-3">
