@@ -12,7 +12,8 @@
         <div class="card-body">
             <form th:action="@{/members/{memberId}/contributions(memberId=${member.id})}"
                   th:object="${contribution}"
-                  method="post">
+                  method="post"
+                  enctype="multipart/form-data">
 
                 <div class="row mb-3">
                     <div class="col-md-6">
@@ -32,6 +33,14 @@
                                placeholder="Payment reference (e.g. bank ref)" />
                         <div class="invalid-feedback" th:if="${#fields.hasErrors('reference')}"
                              th:errors="*{reference}"></div>
+                    </div>
+                </div>
+
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <label for="proofOfPayment" class="form-label">Proof of Payment (optional)</label>
+                        <input type="file" class="form-control" id="proofOfPayment" name="proofOfPayment" accept=".pdf,.jpg,.jpeg,.png" />
+                        <small class="text-muted">PDF, JPEG, or PNG - max 5MB</small>
                     </div>
                 </div>
 

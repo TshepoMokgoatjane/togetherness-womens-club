@@ -12,7 +12,8 @@
         <div class="card-body">
             <form th:action="@{/members/{memberId}/claims(memberId=${member.id})}"
                   th:object="${claim}"
-                  method="post">
+                  method="post"
+                  enctype="multipart/form-data">
 
                 <div class="row mb-3">
                     <div class="col-md-6">
@@ -32,6 +33,37 @@
                                placeholder="Enter claim amount" />
                         <div class="invalid-feedback" th:if="${#fields.hasErrors('claimAmount')}"
                              th:errors="*{claimAmount}"></div>
+                    </div>
+                </div>
+
+                <!-- DOCUMENT UPLOAD -->
+                <div class="mb-3">
+                    <label class="form-label fw-bold">Supporting Documents</label>
+                    <p class="text-muted small">Upload Death Certificate, Birth Certificate, Proof of Address, etc. (PDF, JPEG, PNG - max 5MB each)</p>
+
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label for="doc1" class="form-label">Document 1</label>
+                            <input type="file" class="form-control" id="doc1" name="documents" accept=".pdf,.jpg,.jpeg,.png" />
+                            <select class="form-select form-select-sm mt-1" name="documentTypes">
+                                <option value="DEATH_CERTIFICATE">Death Certificate</option>
+                                <option value="BIRTH_CERTIFICATE">Birth Certificate</option>
+                                <option value="PROOF_OF_ADDRESS">Proof of Address</option>
+                                <option value="ID_DOCUMENT">ID Document</option>
+                                <option value="OTHER">Other</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="doc2" class="form-label">Document 2 (optional)</label>
+                            <input type="file" class="form-control" id="doc2" name="documents" accept=".pdf,.jpg,.jpeg,.png" />
+                            <select class="form-select form-select-sm mt-1" name="documentTypes">
+                                <option value="DEATH_CERTIFICATE">Death Certificate</option>
+                                <option value="BIRTH_CERTIFICATE">Birth Certificate</option>
+                                <option value="PROOF_OF_ADDRESS">Proof of Address</option>
+                                <option value="ID_DOCUMENT">ID Document</option>
+                                <option value="OTHER">Other</option>
+                            </select>
+                        </div>
                     </div>
                 </div>
 

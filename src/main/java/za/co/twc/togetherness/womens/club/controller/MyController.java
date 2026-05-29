@@ -1,11 +1,14 @@
 package za.co.twc.togetherness.womens.club.controller;
 
 import jakarta.validation.Valid;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import za.co.twc.togetherness.womens.club.domain.BurialClaim;
 import za.co.twc.togetherness.womens.club.domain.Dependent;
@@ -16,28 +19,34 @@ import za.co.twc.togetherness.womens.club.repository.UserRepository;
 import za.co.twc.togetherness.womens.club.service.BurialClaimService;
 import za.co.twc.togetherness.womens.club.service.ContributionService;
 import za.co.twc.togetherness.womens.club.service.DependentService;
+import za.co.twc.togetherness.womens.club.service.DocumentService;
 import za.co.twc.togetherness.womens.club.service.MemberService;
 
 @Controller
 @RequestMapping("/my")
 public class MyController {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(MyController.class);
+
     private final UserRepository userRepository;
     private final MemberService memberService;
     private final DependentService dependentService;
     private final ContributionService contributionService;
     private final BurialClaimService burialClaimService;
+    private final DocumentService documentService;
 
     public MyController(UserRepository userRepository,
                         MemberService memberService,
                         DependentService dependentService,
                         ContributionService contributionService,
-                        BurialClaimService burialClaimService) {
+                        BurialClaimService burialClaimService,
+                        DocumentService documentService) {
         this.userRepository = userRepository;
         this.memberService = memberService;
         this.dependentService = dependentService;
         this.contributionService = contributionService;
         this.burialClaimService = burialClaimService;
+        this.documentService = documentService;
     }
 
     // ==================
@@ -135,6 +144,8 @@ public class MyController {
     public String submitClaim(Authentication authentication,
                               @Valid @ModelAttribute("claim") BurialClaim claim,
                               BindingResult result,
+                              @RequestParam(value = "documents", required = false) MultipartFile[] documents,
+                              @RequestParam(value = "documentTypes", required = false) String[] documentTypes,
                               Model model,
                               RedirectAttributes redirectAttributes) {
         Member member = getLoggedInMember(authentication);
@@ -145,7 +156,24 @@ public class MyController {
             return "my/claim-form";
         }
 
-        burialClaimService.createClaim(member.getId(), claim);
+        try {
+            BurialClaim saved = burialClaimService.createClaim(member.getId(), claim);
+
+            if (documents != null) {
+                for (int i = 0; i < documents.length; i++) {
+                    if (!documents[i].isEmpty()) {
+                        String docType = (documentTypes != null && i < documentTypes.length) ? documentTypes[i] : "SUPPORTING_DOCUMENT";
+                        documentService.uploadForClaim(documents[i], saved.getId(), docType);
+                    }
+                }
+            }
+        } catch (Exception ex) {
+            LOGGER.error("Error submitting claim", ex);
+            model.addAttribute("member", member);
+            model.addAttribute("errorMessage", ex.getMessage());
+            return "my/claim-form";
+        }
+
         redirectAttributes.addFlashAttribute("successMessage", "Claim submitted successfully!");
         return "redirect:/my/claims";
     }

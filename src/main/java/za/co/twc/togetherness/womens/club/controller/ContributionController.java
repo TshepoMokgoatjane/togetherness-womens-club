@@ -1,30 +1,38 @@
 package za.co.twc.togetherness.womens.club.controller;
 
 import jakarta.validation.Valid;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import za.co.twc.togetherness.womens.club.domain.Contribution;
 import za.co.twc.togetherness.womens.club.exception.DuplicateMonthlyContributionException;
 import za.co.twc.togetherness.womens.club.exception.InvalidContributionAmountException;
 import za.co.twc.togetherness.womens.club.exception.NonActiveMemberContributionException;
 import za.co.twc.togetherness.womens.club.service.ContributionService;
+import za.co.twc.togetherness.womens.club.service.DocumentService;
 import za.co.twc.togetherness.womens.club.service.MemberService;
 
 @Controller
 public class ContributionController {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(ContributionController.class);
+
     private final ContributionService contributionService;
     private final MemberService memberService;
+    private final DocumentService documentService;
 
     @Autowired
-    public ContributionController(ContributionService contributionService, MemberService memberService) {
+    public ContributionController(ContributionService contributionService, MemberService memberService, DocumentService documentService) {
         this.contributionService = contributionService;
         this.memberService = memberService;
+        this.documentService = documentService;
     }
 
     // ==================
@@ -69,6 +77,7 @@ public class ContributionController {
     public String createContribution(@RequestParam(required = false) Long memberId,
                                      @Valid @ModelAttribute("contribution") Contribution contribution,
                                      BindingResult result,
+                                     @RequestParam(value = "proofOfPayment", required = false) MultipartFile proofOfPayment,
                                      Model model,
                                      RedirectAttributes redirectAttributes) {
 
@@ -87,12 +96,22 @@ public class ContributionController {
         }
 
         try {
-            contributionService.createContribution(memberId, contribution);
+            Contribution saved = contributionService.createContribution(memberId, contribution);
+
+            if (proofOfPayment != null && !proofOfPayment.isEmpty()) {
+                documentService.uploadForContribution(proofOfPayment, saved.getId());
+            }
         } catch (DuplicateMonthlyContributionException | NonActiveMemberContributionException |
                  InvalidContributionAmountException ex) {
             model.addAttribute("members", memberService.getAllActiveMembers());
             model.addAttribute("selectedMemberId", memberId);
             model.addAttribute("errorMessage", ex.getMessage());
+            return "contribution/new";
+        } catch (Exception ex) {
+            LOGGER.error("Error uploading proof of payment", ex);
+            model.addAttribute("members", memberService.getAllActiveMembers());
+            model.addAttribute("selectedMemberId", memberId);
+            model.addAttribute("errorMessage", "Contribution saved but document upload failed: " + ex.getMessage());
             return "contribution/new";
         }
 
@@ -123,6 +142,7 @@ public class ContributionController {
     public String create(@PathVariable Long memberId,
                          @Valid @ModelAttribute("contribution") Contribution contribution,
                          BindingResult result,
+                         @RequestParam(value = "proofOfPayment", required = false) MultipartFile proofOfPayment,
                          Model model,
                          RedirectAttributes redirectAttributes) {
 
@@ -136,11 +156,20 @@ public class ContributionController {
         }
 
         try {
-            contributionService.createContribution(memberId, contribution);
+            Contribution saved = contributionService.createContribution(memberId, contribution);
+
+            if (proofOfPayment != null && !proofOfPayment.isEmpty()) {
+                documentService.uploadForContribution(proofOfPayment, saved.getId());
+            }
         } catch (DuplicateMonthlyContributionException | NonActiveMemberContributionException |
                  InvalidContributionAmountException ex) {
             model.addAttribute("member", memberService.getActiveMemberById(memberId));
             model.addAttribute("errorMessage", ex.getMessage());
+            return "contribution/form";
+        } catch (Exception ex) {
+            LOGGER.error("Error uploading proof of payment", ex);
+            model.addAttribute("member", memberService.getActiveMemberById(memberId));
+            model.addAttribute("errorMessage", "Contribution saved but document upload failed: " + ex.getMessage());
             return "contribution/form";
         }
 
