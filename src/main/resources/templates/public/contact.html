@@ -72,23 +72,35 @@
                         <div class="card-body p-4">
                             <h4 class="fw-bold mb-4">Send Us a Message</h4>
 
-                            <form>
+                            <!-- SUCCESS/ERROR MESSAGES -->
+                            <div th:if="${successMessage}" class="alert alert-success alert-dismissible fade show" role="alert">
+                                <i class="bi bi-check-circle me-1"></i>
+                                <span th:text="${successMessage}"></span>
+                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                            </div>
+                            <div th:if="${errorMessage}" class="alert alert-danger alert-dismissible fade show" role="alert">
+                                <i class="bi bi-exclamation-circle me-1"></i>
+                                <span th:text="${errorMessage}"></span>
+                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                            </div>
+
+                            <form th:action="@{/contact}" method="post">
                                 <div class="row g-3">
                                     <div class="col-md-6">
                                         <label for="name" class="form-label">Full Name</label>
-                                        <input type="text" class="form-control" id="name" placeholder="Your name" required />
+                                        <input type="text" class="form-control" id="name" name="name" placeholder="Your name" required />
                                     </div>
                                     <div class="col-md-6">
                                         <label for="email" class="form-label">Email Address</label>
-                                        <input type="email" class="form-control" id="email" placeholder="your@email.com" required />
+                                        <input type="email" class="form-control" id="email" name="email" placeholder="your@email.com" required />
                                     </div>
                                     <div class="col-12">
                                         <label for="subject" class="form-label">Subject</label>
-                                        <input type="text" class="form-control" id="subject" placeholder="How can we help?" required />
+                                        <input type="text" class="form-control" id="subject" name="subject" placeholder="How can we help?" required />
                                     </div>
                                     <div class="col-12">
                                         <label for="message" class="form-label">Message</label>
-                                        <textarea class="form-control" id="message" rows="5" placeholder="Your message..." required></textarea>
+                                        <textarea class="form-control" id="message" name="message" rows="5" placeholder="Your message..." required></textarea>
                                     </div>
                                     <div class="col-12">
                                         <button type="submit" class="btn btn-success btn-lg btn-success-glow">
