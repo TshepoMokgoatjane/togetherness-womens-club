@@ -2,23 +2,22 @@ package za.co.twc.togetherness.womens.club.controller;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.mail.SimpleMailMessage;
-import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import za.co.twc.togetherness.womens.club.service.EmailService;
 
 @Controller
 public class LandingController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(LandingController.class);
 
-    private final JavaMailSender mailSender;
+    private final EmailService emailService;
 
-    public LandingController(JavaMailSender mailSender) {
-        this.mailSender = mailSender;
+    public LandingController(EmailService emailService) {
+        this.emailService = emailService;
     }
 
     @GetMapping("/")
@@ -48,19 +47,13 @@ public class LandingController {
                                     @RequestParam String message,
                                     RedirectAttributes redirectAttributes) {
         try {
-            SimpleMailMessage mailMessage = new SimpleMailMessage();
-            mailMessage.setTo("tshepomokgoatjane11@gmail.com");
-            mailMessage.setSubject("Contact Form: " + subject);
-            mailMessage.setReplyTo(email);
-            mailMessage.setText(
-                    "New message from the Contact Us form:\n\n" +
+            String body = "New message from the Contact Us form:\n\n" +
                     "Name: " + name + "\n" +
                     "Email: " + email + "\n" +
                     "Subject: " + subject + "\n\n" +
-                    "Message:\n" + message
-            );
+                    "Message:\n" + message;
 
-            mailSender.send(mailMessage);
+            emailService.sendEmail("tshepomokgoatjane11@gmail.com", "Contact Form: " + subject, body);
 
             LOGGER.info("Contact form message sent from {} ({})", name, email);
             redirectAttributes.addFlashAttribute("successMessage", "Your message has been sent successfully! We'll get back to you soon.");
