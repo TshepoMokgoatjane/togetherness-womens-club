@@ -93,4 +93,32 @@ public class UserManagementController {
 
         return "redirect:/admin/users";
     }
+
+    @PostMapping("/{userId}/delete")
+    public String deleteUser(@PathVariable Long userId, RedirectAttributes redirectAttributes) {
+
+        Optional<User> userOpt = userRepository.findById(userId);
+        if (userOpt.isEmpty()) {
+            redirectAttributes.addFlashAttribute("errorMessage", "User not found.");
+            return "redirect:/admin/users";
+        }
+
+        User user = userOpt.get();
+
+        // Only allow deletion of unlinked users
+        if (user.getMemberId() != null) {
+            redirectAttributes.addFlashAttribute("errorMessage",
+                    "Cannot delete user '" + user.getUsername() + "' because they are linked to a member. Unlink them first.");
+            return "redirect:/admin/users";
+        }
+
+        userRepository.delete(user);
+
+        LOGGER.info("Unlinked user '{}' deleted by admin", user.getUsername());
+
+        redirectAttributes.addFlashAttribute("successMessage",
+                "User '" + user.getUsername() + "' has been deleted.");
+
+        return "redirect:/admin/users";
+    }
 }

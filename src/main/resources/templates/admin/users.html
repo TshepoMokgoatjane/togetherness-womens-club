@@ -75,6 +75,17 @@
                                 th:data-username="${user.username}">
                             <i class="bi bi-x-circle"></i> Unlink
                         </button>
+
+                        <!-- DELETE BUTTON (only for unlinked users) -->
+                        <button th:if="${user.memberId == null}" type="button"
+                                class="btn btn-sm btn-danger ms-1"
+                                title="Delete"
+                                data-bs-toggle="modal"
+                                data-bs-target="#deleteModal"
+                                th:data-user-id="${user.id}"
+                                th:data-username="${user.username}">
+                            <i class="bi bi-trash"></i> Delete
+                        </button>
                     </td>
                 </tr>
                 <tr th:if="${#lists.isEmpty(users)}">
@@ -123,7 +134,43 @@
             document.getElementById('unlinkUsername').textContent = username;
             document.getElementById('unlinkForm').action = '/admin/users/' + userId + '/unlink';
         });
+
+        document.getElementById('deleteModal').addEventListener('show.bs.modal', function (event) {
+            var button = event.relatedTarget;
+            var userId = button.getAttribute('data-user-id');
+            var username = button.getAttribute('data-username');
+
+            document.getElementById('deleteUsername').textContent = username;
+            document.getElementById('deleteForm').action = '/admin/users/' + userId + '/delete';
+        });
     </script>
+
+    <!-- DELETE CONFIRMATION MODAL -->
+    <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header bg-danger text-white">
+                    <h5 class="modal-title" id="deleteModalLabel">
+                        <i class="bi bi-trash me-2"></i>Confirm Delete
+                    </h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p>Are you sure you want to permanently delete user <strong id="deleteUsername"></strong>?</p>
+                    <p class="text-muted small mb-0">This action cannot be undone. The user account will be removed from the system.</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <form id="deleteForm" method="post" class="d-inline">
+                        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+                        <button type="submit" class="btn btn-danger">
+                            <i class="bi bi-trash me-1"></i>Delete
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
 
 </div>
 
