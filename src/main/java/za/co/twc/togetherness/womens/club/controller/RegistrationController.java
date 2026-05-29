@@ -65,6 +65,11 @@ public class RegistrationController {
             result.rejectValue("username", "error.registrationForm", "Username is already taken");
         }
 
+        // Check email not taken
+        if (userRepository.findByEmail(form.getEmail()).isPresent()) {
+            result.rejectValue("email", "error.registrationForm", "An account with this email already exists");
+        }
+
         if (result.hasErrors()) {
             return "register";
         }
@@ -72,6 +77,7 @@ public class RegistrationController {
         // Create user with USER role
         User user = new User();
         user.setUsername(form.getUsername());
+        user.setEmail(form.getEmail());
         user.setPassword(passwordEncoder.encode(form.getPassword()));
         user.setRole("USER");
 
