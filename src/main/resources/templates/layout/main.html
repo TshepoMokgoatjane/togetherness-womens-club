@@ -105,6 +105,11 @@
                         <i class="bi bi-person-gear me-1"></i>Users
                     </a>
                 </li>
+                <li class="nav-item" sec:authorize="hasRole('ADMIN')">
+                    <a class="nav-link" th:href="@{/admin/audit}">
+                        <i class="bi bi-clock-history me-1"></i>Audit
+                    </a>
+                </li>
 
                 <!-- USER ROLE MENU -->
                 <li class="nav-item" sec:authorize="hasRole('USER')">
@@ -131,10 +136,14 @@
 
             <!-- USER INFO + LOGOUT -->
             <div class="d-flex align-items-center">
-                <a sec:authorize="hasAnyRole('ADMIN', 'TREASURER')" th:href="@{/profile}" class="text-light text-decoration-none me-3"
+                <a sec:authorize="hasAnyRole('ADMIN', 'TREASURER')" th:href="@{/profile}" class="text-light text-decoration-none me-2"
                    data-bs-toggle="tooltip" data-bs-placement="bottom" title="My Profile">
                     <i class="bi bi-person-check me-1"></i>
                     <span sec:authentication="name"></span>
+                </a>
+                <a th:href="@{/profile/change-password}" class="btn btn-outline-light btn-sm me-2"
+                   data-bs-toggle="tooltip" data-bs-placement="bottom" title="Change Password">
+                    <i class="bi bi-key"></i>
                 </a>
                 <a sec:authorize="hasRole('USER')" th:href="@{/my}" class="text-light text-decoration-none me-3"
                    data-bs-toggle="tooltip" data-bs-placement="bottom" title="My Dashboard">
