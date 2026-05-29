@@ -46,6 +46,7 @@
                     <th>Amount</th>
                     <th>Reference</th>
                     <th>Payment Date</th>
+                    <th>Proof</th>
                     <th>Status</th>
                 </tr>
             </thead>
@@ -57,6 +58,18 @@
                     <td th:text="${contribution.reference != null ? contribution.reference : '-'}"></td>
                     <td th:text="${contribution.paymentDate != null ? contribution.paymentDate : '-'}"></td>
                     <td>
+                        <th:block th:if="${contributionDocuments[contribution.id] != null && !contributionDocuments[contribution.id].isEmpty()}">
+                            <th:block th:each="doc : ${contributionDocuments[contribution.id]}">
+                                <a th:href="@{/documents/{id}/download(id=${doc.id})}" target="_blank"
+                                   class="badge bg-info text-decoration-none" title="View proof of payment">
+                                    <i class="bi bi-file-earmark me-1"></i>
+                                    <span th:text="${doc.fileName.length() > 15 ? doc.fileName.substring(0, 15) + '...' : doc.fileName}"></span>
+                                </a>
+                            </th:block>
+                        </th:block>
+                        <span th:if="${contributionDocuments[contribution.id] == null || contributionDocuments[contribution.id].isEmpty()}" class="text-muted small">None</span>
+                    </td>
+                    <td>
                         <span class="badge"
                               th:classappend="${contribution.status.name() == 'PAID'} ? 'bg-success' :
                                               (${contribution.status.name() == 'PENDING'} ? 'bg-warning text-dark' : 'bg-danger')"
@@ -64,7 +77,7 @@
                     </td>
                 </tr>
                 <tr th:if="${#lists.isEmpty(contributions)}">
-                    <td colspan="6" class="text-center text-muted py-4">
+                    <td colspan="7" class="text-center text-muted py-4">
                         <i class="bi bi-inbox fs-3 d-block mb-2"></i>
                         No contributions found
                     </td>

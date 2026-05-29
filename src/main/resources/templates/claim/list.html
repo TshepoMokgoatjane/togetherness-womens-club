@@ -52,6 +52,7 @@
                     <th>Claim Amount</th>
                     <th>Claim Date</th>
                     <th>Status</th>
+                    <th>Documents</th>
                     <th style="width: 180px">Actions</th>
                 </tr>
             </thead>
@@ -68,6 +69,18 @@
                               th:classappend="${claim.status.name() == 'APPROVED'} ? 'bg-success' :
                                               (${claim.status.name() == 'PENDING'} ? 'bg-warning text-dark' : 'bg-danger')"
                               th:text="${claim.status}"></span>
+                    </td>
+                    <td>
+                        <th:block th:if="${claimDocuments[claim.id] != null && !claimDocuments[claim.id].isEmpty()}">
+                            <th:block th:each="doc : ${claimDocuments[claim.id]}">
+                                <a th:href="@{/documents/{id}/download(id=${doc.id})}" target="_blank"
+                                   class="badge bg-info text-decoration-none me-1 mb-1" th:title="${doc.documentType}">
+                                    <i class="bi bi-file-earmark me-1"></i>
+                                    <span th:text="${doc.fileName.length() > 15 ? doc.fileName.substring(0, 15) + '...' : doc.fileName}"></span>
+                                </a>
+                            </th:block>
+                        </th:block>
+                        <span th:if="${claimDocuments[claim.id] == null || claimDocuments[claim.id].isEmpty()}" class="text-muted small">None</span>
                     </td>
                     <td>
                         <!-- Only show actions for PENDING claims -->
@@ -91,7 +104,7 @@
                     </td>
                 </tr>
                 <tr th:if="${#lists.isEmpty(claims)}">
-                    <td colspan="8" class="text-center text-muted py-4">
+                    <td colspan="9" class="text-center text-muted py-4">
                         <i class="bi bi-inbox fs-3 d-block mb-2"></i>
                         No burial claims submitted yet
                     </td>

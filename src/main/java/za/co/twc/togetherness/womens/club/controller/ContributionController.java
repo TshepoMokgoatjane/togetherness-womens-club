@@ -59,6 +59,13 @@ public class ContributionController {
         model.addAttribute("search", search);
         model.addAttribute("status", status);
 
+        // Load documents for each contribution
+        java.util.Map<Long, java.util.List<za.co.twc.togetherness.womens.club.domain.Document>> contributionDocuments = new java.util.HashMap<>();
+        for (Contribution c : pageData.getContent()) {
+            contributionDocuments.put(c.getId(), documentService.getDocumentsForContribution(c.getId()));
+        }
+        model.addAttribute("contributionDocuments", contributionDocuments);
+
         return "contribution/all";
     }
 

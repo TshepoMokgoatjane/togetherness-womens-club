@@ -58,6 +58,13 @@ public class BurialClaimController {
         model.addAttribute("search", search);
         model.addAttribute("status", status);
 
+        // Load documents for each claim
+        java.util.Map<Long, java.util.List<za.co.twc.togetherness.womens.club.domain.Document>> claimDocuments = new java.util.HashMap<>();
+        for (BurialClaim claim : claimsData.getContent()) {
+            claimDocuments.put(claim.getId(), documentService.getDocumentsForClaim(claim.getId()));
+        }
+        model.addAttribute("claimDocuments", claimDocuments);
+
         return "claim/list";
     }
 
