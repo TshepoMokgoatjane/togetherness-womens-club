@@ -11,22 +11,23 @@
                     <h1 class="display-4 fw-bold mb-3">
                         Together We Are <span class="text-success">Stronger</span>
                     </h1>
-                    <p class="lead text-light opacity-75 mb-4">
+                    <p class="lead text-light mb-4" style="opacity: 0.85;">
                         Togetherness Women's Club is a community of women united in purpose,
                         supporting one another through life's journey with dignity, care, and solidarity.
                     </p>
                     <div class="d-flex gap-3 flex-wrap">
-                        <a th:href="@{/about}" class="btn btn-success btn-lg btn-success-glow">
-                            <i class="bi bi-people me-2"></i>Learn More
+                        <a th:href="@{/about}" class="btn btn-success btn-lg btn-success-glow px-4 py-2">
+                            <i class="bi bi-people me-2" aria-hidden="true"></i>Learn more about us
                         </a>
-                        <a th:href="@{/login}" class="btn btn-outline-light btn-lg">
-                            <i class="bi bi-box-arrow-in-right me-2"></i>Member Portal
+                        <a th:href="@{/login}" class="btn btn-outline-light btn-lg px-4 py-2">
+                            <i class="bi bi-box-arrow-in-right me-2" aria-hidden="true"></i>Sign in to Member Portal
                         </a>
                     </div>
                 </div>
                 <div class="col-lg-5 text-center mt-5 mt-lg-0">
-                    <img th:src="@{/images/logo-square.png}" alt="Togetherness Women's Club"
-                         class="img-fluid rounded-circle shadow-lg" style="max-width: 300px; border: 4px solid rgba(25, 135, 84, 0.5);" />
+                    <img th:src="@{/images/logo-square.png}" alt="Togetherness Women's Club logo"
+                         width="300" height="300" class="img-fluid rounded-circle shadow-lg"
+                         style="border: 4px solid rgba(25, 135, 84, 0.5);" loading="eager" fetchpriority="high" />
                 </div>
             </div>
         </div>
@@ -46,9 +47,9 @@
                     <div class="card feature-card h-100 shadow-sm text-center p-4">
                         <div class="card-body">
                             <div class="bg-success bg-opacity-10 rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 70px; height: 70px;">
-                                <i class="bi bi-cash-coin text-success fs-2"></i>
+                                <i class="bi bi-cash-coin text-success fs-2" aria-hidden="true"></i>
                             </div>
-                            <h5 class="card-title">Monthly Contributions</h5>
+                            <h3 class="h5 card-title">Monthly Contributions</h3>
                             <p class="card-text text-muted">Members contribute monthly to build a collective fund that supports the community in times of need.</p>
                         </div>
                     </div>
@@ -57,9 +58,9 @@
                     <div class="card feature-card h-100 shadow-sm text-center p-4">
                         <div class="card-body">
                             <div class="bg-success bg-opacity-10 rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 70px; height: 70px;">
-                                <i class="bi bi-heart text-success fs-2"></i>
+                                <i class="bi bi-heart text-success fs-2" aria-hidden="true"></i>
                             </div>
-                            <h5 class="card-title">Burial Assistance</h5>
+                            <h3 class="h5 card-title">Burial Assistance</h3>
                             <p class="card-text text-muted">We provide financial support to members and their families during bereavement, easing the burden in difficult times.</p>
                         </div>
                     </div>
@@ -68,9 +69,9 @@
                     <div class="card feature-card h-100 shadow-sm text-center p-4">
                         <div class="card-body">
                             <div class="bg-success bg-opacity-10 rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 70px; height: 70px;">
-                                <i class="bi bi-people-fill text-success fs-2"></i>
+                                <i class="bi bi-people-fill text-success fs-2" aria-hidden="true"></i>
                             </div>
-                            <h5 class="card-title">Community & Sisterhood</h5>
+                            <h3 class="h5 card-title">Community &amp; Sisterhood</h3>
                             <p class="card-text text-muted">Beyond financial support, we foster lasting bonds of friendship, mentorship, and mutual empowerment.</p>
                         </div>
                     </div>
@@ -82,10 +83,10 @@
     <!-- CALL TO ACTION -->
     <section class="py-5 bg-success text-white">
         <div class="container text-center">
-            <h3 class="fw-bold mb-3">Ready to Join Our Community?</h3>
-            <p class="mb-4 opacity-75">Become part of a sisterhood that cares. Register today and experience the power of togetherness.</p>
-            <a th:href="@{/register}" class="btn btn-light btn-lg">
-                <i class="bi bi-person-plus me-2"></i>Register Now
+            <h2 class="fw-bold mb-3">Ready to Join Our Community?</h2>
+            <p class="mb-4" style="opacity: 0.85;">Become part of a sisterhood that cares. Register today and experience the power of togetherness.</p>
+            <a th:href="@{/register}" class="btn btn-light btn-lg px-4 py-2">
+                <i class="bi bi-person-plus me-2" aria-hidden="true"></i>Register as a new member
             </a>
         </div>
     </section>

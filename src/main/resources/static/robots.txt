@@ -1,0 +1,19 @@
+User-agent: *
+Allow: /
+Allow: /about
+Allow: /gallery
+Allow: /contact
+
+Disallow: /login
+Disallow: /register
+Disallow: /home
+Disallow: /my/
+Disallow: /members/
+Disallow: /contributions/
+Disallow: /reports/
+Disallow: /claims/
+Disallow: /admin/
+Disallow: /profile/
+Disallow: /actuator/
+
+Sitemap: https://www.togethernesswomensclub.co.za/sitemap.xml
