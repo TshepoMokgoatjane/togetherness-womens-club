@@ -94,6 +94,11 @@
 
             <!-- FOOTER -->
             <p class="text-center text-secondary mt-4">
+                <a th:href="@{/}" class="text-secondary text-decoration-none">
+                    <i class="bi bi-arrow-left me-1"></i>Back to Home
+                </a>
+            </p>
+            <p class="text-center text-secondary">
                 <small>&copy; <span th:text="${#dates.format(#dates.createNow(), 'yyyy')}"></span> Togetherness Women's Club</small>
             </p>
 

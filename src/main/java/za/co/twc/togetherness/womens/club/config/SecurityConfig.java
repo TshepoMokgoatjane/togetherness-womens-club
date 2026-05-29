@@ -27,7 +27,7 @@ public class SecurityConfig {
                         .defaultSuccessUrl("/login-success", true)
                         .permitAll())
                 .logout(logout -> logout
-                        .logoutSuccessUrl("/login?logout")
+                        .logoutSuccessUrl("/?logout")
                         .permitAll())
                 .exceptionHandling(ex -> ex
                         .accessDeniedPage("/access-denied"))

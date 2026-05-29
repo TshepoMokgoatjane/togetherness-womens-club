@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" th:replace="~{layout/public :: layout(~{::content})}">
+
+<div th:fragment="content">
+
+    <!-- HEADER -->
+    <section class="bg-dark text-white py-5">
+        <div class="container text-center">
+            <h1 class="fw-bold" style="padding-top: 34px;">About Us</h1>
+            <div class="section-divider mt-2 mb-3"></div>
+            <p class="lead text-light opacity-75">Our story, our mission, our values</p>
+        </div>
+    </section>
+
+    <!-- OUR STORY -->
+    <section class="py-5">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-lg-6 mb-4 mb-lg-0">
+                    <img th:src="@{/images/logo-square.png}" alt="TWC" class="img-fluid rounded-circle shadow mx-auto d-block" style="max-width: 280px;" />
+                </div>
+                <div class="col-lg-6">
+                    <h2 class="fw-bold mb-3">Our Story</h2>
+                    <div class="section-divider mb-4" style="margin: 0;"></div>
+                    <p class="text-muted">
+                        Togetherness Women's Club was founded on the belief that women are stronger together.
+                        What started as a small group of women supporting each other has grown into a vibrant
+                        community united by compassion, solidarity, and shared purpose.
+                    </p>
+                    <p class="text-muted">
+                        Our members come from all walks of life, bound by a common commitment to uplift one another
+                        through monthly contributions that provide a safety net during life's most challenging moments.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- MISSION & VISION -->
+    <section class="py-5 bg-light">
+        <div class="container">
+            <div class="row g-4">
+                <div class="col-md-6">
+                    <div class="card feature-card h-100 shadow-sm border-start border-success border-4">
+                        <div class="card-body p-4">
+                            <h4 class="fw-bold text-success mb-3">
+                                <i class="bi bi-bullseye me-2"></i>Our Mission
+                            </h4>
+                            <p class="text-muted mb-0">
+                                To empower women through collective financial support, providing dignity and care
+                                to our members and their families during times of bereavement, while fostering a
+                                community of sisterhood and mutual upliftment.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="card feature-card h-100 shadow-sm border-start border-success border-4">
+                        <div class="card-body p-4">
+                            <h4 class="fw-bold text-success mb-3">
+                                <i class="bi bi-eye me-2"></i>Our Vision
+                            </h4>
+                            <p class="text-muted mb-0">
+                                A community where every woman feels supported, valued, and empowered — knowing
+                                that in her time of need, her sisters will stand beside her with unwavering solidarity.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- VALUES -->
+    <section class="py-5">
+        <div class="container">
+            <div class="text-center mb-5">
+                <h2 class="fw-bold">Our Values</h2>
+                <div class="section-divider mt-2 mb-3"></div>
+            </div>
+
+            <div class="row g-4">
+                <div class="col-md-3 col-6">
+                    <div class="text-center">
+                        <div class="bg-success bg-opacity-10 rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 60px; height: 60px;">
+                            <i class="bi bi-hand-thumbs-up text-success fs-4"></i>
+                        </div>
+                        <h6 class="fw-bold">Unity</h6>
+                        <p class="text-muted small">Stronger together in all we do</p>
+                    </div>
+                </div>
+                <div class="col-md-3 col-6">
+                    <div class="text-center">
+                        <div class="bg-success bg-opacity-10 rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 60px; height: 60px;">
+                            <i class="bi bi-shield-check text-success fs-4"></i>
+                        </div>
+                        <h6 class="fw-bold">Integrity</h6>
+                        <p class="text-muted small">Transparent and accountable</p>
+                    </div>
+                </div>
+                <div class="col-md-3 col-6">
+                    <div class="text-center">
+                        <div class="bg-success bg-opacity-10 rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 60px; height: 60px;">
+                            <i class="bi bi-heart-fill text-success fs-4"></i>
+                        </div>
+                        <h6 class="fw-bold">Compassion</h6>
+                        <p class="text-muted small">Caring for one another always</p>
+                    </div>
+                </div>
+                <div class="col-md-3 col-6">
+                    <div class="text-center">
+                        <div class="bg-success bg-opacity-10 rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 60px; height: 60px;">
+                            <i class="bi bi-star-fill text-success fs-4"></i>
+                        </div>
+                        <h6 class="fw-bold">Empowerment</h6>
+                        <p class="text-muted small">Lifting each other up</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+</div>
+
+</html>

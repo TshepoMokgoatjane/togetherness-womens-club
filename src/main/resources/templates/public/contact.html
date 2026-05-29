@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" th:replace="~{layout/public :: layout(~{::content})}">
+
+<div th:fragment="content">
+
+    <!-- HEADER -->
+    <section class="bg-dark text-white py-5">
+        <div class="container text-center">
+            <h1 class="fw-bold" style="padding-top: 34px;">Contact Us</h1>
+            <div class="section-divider mt-2 mb-3"></div>
+            <p class="lead text-light opacity-75">We'd love to hear from you</p>
+        </div>
+    </section>
+
+    <!-- CONTACT CONTENT -->
+    <section class="py-5">
+        <div class="container">
+            <div class="row g-5">
+
+                <!-- CONTACT INFO -->
+                <div class="col-lg-5">
+                    <h3 class="fw-bold mb-4">Get In Touch</h3>
+                    <p class="text-muted mb-4">
+                        Have questions about membership, contributions, or our community?
+                        Reach out to us and we'll get back to you as soon as possible.
+                    </p>
+
+                    <div class="d-flex align-items-start mb-4">
+                        <div class="bg-success bg-opacity-10 rounded-circle d-flex align-items-center justify-content-center me-3 flex-shrink-0" style="width: 50px; height: 50px;">
+                            <i class="bi bi-envelope text-success fs-5"></i>
+                        </div>
+                        <div>
+                            <h6 class="fw-bold mb-1">Email</h6>
+                            <p class="text-muted mb-0">info@togethernesswomensclub.co.za</p>
+                        </div>
+                    </div>
+
+                    <div class="d-flex align-items-start mb-4">
+                        <div class="bg-success bg-opacity-10 rounded-circle d-flex align-items-center justify-content-center me-3 flex-shrink-0" style="width: 50px; height: 50px;">
+                            <i class="bi bi-telephone text-success fs-5"></i>
+                        </div>
+                        <div>
+                            <h6 class="fw-bold mb-1">Phone</h6>
+                            <p class="text-muted mb-0">+27 (0) 81 416 5812</p>
+                        </div>
+                    </div>
+
+                    <div class="d-flex align-items-start mb-4">
+                        <div class="bg-success bg-opacity-10 rounded-circle d-flex align-items-center justify-content-center me-3 flex-shrink-0" style="width: 50px; height: 50px;">
+                            <i class="bi bi-geo-alt text-success fs-5"></i>
+                        </div>
+                        <div>
+                            <h6 class="fw-bold mb-1">Location</h6>
+                            <p class="text-muted mb-0">Gauteng, South Africa</p>
+                        </div>
+                    </div>
+
+                    <div class="d-flex align-items-start">
+                        <div class="bg-success bg-opacity-10 rounded-circle d-flex align-items-center justify-content-center me-3 flex-shrink-0" style="width: 50px; height: 50px;">
+                            <i class="bi bi-whatsapp text-success fs-5"></i>
+                        </div>
+                        <div>
+                            <h6 class="fw-bold mb-1">WhatsApp</h6>
+                            <p class="text-muted mb-0">+27 (0) 81 416 5812</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- CONTACT FORM -->
+                <div class="col-lg-7">
+                    <div class="card shadow-sm border-0">
+                        <div class="card-body p-4">
+                            <h4 class="fw-bold mb-4">Send Us a Message</h4>
+
+                            <form>
+                                <div class="row g-3">
+                                    <div class="col-md-6">
+                                        <label for="name" class="form-label">Full Name</label>
+                                        <input type="text" class="form-control" id="name" placeholder="Your name" required />
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="email" class="form-label">Email Address</label>
+                                        <input type="email" class="form-control" id="email" placeholder="your@email.com" required />
+                                    </div>
+                                    <div class="col-12">
+                                        <label for="subject" class="form-label">Subject</label>
+                                        <input type="text" class="form-control" id="subject" placeholder="How can we help?" required />
+                                    </div>
+                                    <div class="col-12">
+                                        <label for="message" class="form-label">Message</label>
+                                        <textarea class="form-control" id="message" rows="5" placeholder="Your message..." required></textarea>
+                                    </div>
+                                    <div class="col-12">
+                                        <button type="submit" class="btn btn-success btn-lg btn-success-glow">
+                                            <i class="bi bi-send me-2"></i>Send Message
+                                        </button>
+                                    </div>
+                                </div>
+                            </form>
+
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+</div>
+
+</html>

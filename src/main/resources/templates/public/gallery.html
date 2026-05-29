@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" th:replace="~{layout/public :: layout(~{::content})}">
+
+<div th:fragment="content">
+
+    <!-- HEADER -->
+    <section class="bg-dark text-white py-5">
+        <div class="container text-center">
+            <h1 class="fw-bold" style="padding-top: 34px;">Gallery</h1>
+            <div class="section-divider mt-2 mb-3"></div>
+            <p class="lead text-light opacity-75">Moments of togetherness captured</p>
+        </div>
+    </section>
+
+    <!-- GALLERY -->
+    <section class="py-5 bg-light">
+        <div class="container">
+
+            <div class="text-center mb-5">
+                <p class="text-muted">Our gallery showcases the spirit of community, celebration, and sisterhood that defines us.</p>
+            </div>
+
+            <!-- PLACEHOLDER GALLERY GRID -->
+            <div class="row g-4">
+                <div class="col-md-4 col-6">
+                    <div class="card feature-card shadow-sm overflow-hidden">
+                        <div class="bg-success bg-opacity-10 d-flex align-items-center justify-content-center" style="height: 220px;">
+                            <div class="text-center text-success">
+                                <i class="bi bi-camera fs-1"></i>
+                                <p class="small mt-2 mb-0">Community Event</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 col-6">
+                    <div class="card feature-card shadow-sm overflow-hidden">
+                        <div class="bg-success bg-opacity-10 d-flex align-items-center justify-content-center" style="height: 220px;">
+                            <div class="text-center text-success">
+                                <i class="bi bi-people fs-1"></i>
+                                <p class="small mt-2 mb-0">Annual Gathering</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 col-6">
+                    <div class="card feature-card shadow-sm overflow-hidden">
+                        <div class="bg-success bg-opacity-10 d-flex align-items-center justify-content-center" style="height: 220px;">
+                            <div class="text-center text-success">
+                                <i class="bi bi-heart fs-1"></i>
+                                <p class="small mt-2 mb-0">Outreach Program</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 col-6">
+                    <div class="card feature-card shadow-sm overflow-hidden">
+                        <div class="bg-success bg-opacity-10 d-flex align-items-center justify-content-center" style="height: 220px;">
+                            <div class="text-center text-success">
+                                <i class="bi bi-trophy fs-1"></i>
+                                <p class="small mt-2 mb-0">Celebration</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 col-6">
+                    <div class="card feature-card shadow-sm overflow-hidden">
+                        <div class="bg-success bg-opacity-10 d-flex align-items-center justify-content-center" style="height: 220px;">
+                            <div class="text-center text-success">
+                                <i class="bi bi-flower1 fs-1"></i>
+                                <p class="small mt-2 mb-0">Women's Day</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 col-6">
+                    <div class="card feature-card shadow-sm overflow-hidden">
+                        <div class="bg-success bg-opacity-10 d-flex align-items-center justify-content-center" style="height: 220px;">
+                            <div class="text-center text-success">
+                                <i class="bi bi-hand-thumbs-up fs-1"></i>
+                                <p class="small mt-2 mb-0">Fundraiser</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="text-center mt-5">
+                <p class="text-muted">
+                    <i class="bi bi-info-circle me-1"></i>
+                    More photos coming soon. Follow us on social media for the latest updates.
+                </p>
+            </div>
+
+        </div>
+    </section>
+
+</div>
+
+</html>
