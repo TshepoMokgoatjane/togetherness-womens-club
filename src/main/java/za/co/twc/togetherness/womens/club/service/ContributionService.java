@@ -24,6 +24,7 @@ import java.time.YearMonth;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @Service
 @Transactional
@@ -58,13 +59,36 @@ public class ContributionService {
             throw new InvalidContributionAmountException(contribution);
         }
 
-        // Rule 3: Prevent duplicate contribution for the same month
         YearMonth currentMonth = YearMonth.now();
 
-        boolean alreadyExists = contributionRepository.existsByMemberIdAndContributionMonth(memberId, currentMonth);
+        // Check if there's an existing PENDING contribution (created by the cron job)
+        Optional<Contribution> pendingOpt = contributionRepository
+                .findByMemberIdAndContributionMonthAndStatus(memberId, currentMonth, ContributionStatus.PENDING);
 
-        if (alreadyExists) {
+        if (pendingOpt.isPresent()) {
+            // Update the PENDING record to PAID
+            Contribution pending = pendingOpt.get();
+            pending.setAmount(contribution.getAmount());
+            pending.setReference(contribution.getReference());
+            pending.setPaymentDate(
+                    contribution.getPaymentDate() != null
+                            ? contribution.getPaymentDate()
+                            : LocalDate.now()
+            );
+            pending.setStatus(ContributionStatus.PAID);
 
+            Contribution updated = contributionRepository.save(pending);
+
+            LOGGER.info("Member {}, updated PENDING contribution {} to PAID", memberId, updated.getId());
+
+            return updated;
+        }
+
+        // Check if already PAID for this month (true duplicate)
+        boolean alreadyPaid = contributionRepository.existsByMemberIdAndContributionMonthAndStatus(
+                memberId, currentMonth, ContributionStatus.PAID);
+
+        if (alreadyPaid) {
             LOGGER.warn("Duplicate contribution detected for member {} in same month", memberId);
 
             contribution.setMember(member);
@@ -73,7 +97,7 @@ public class ContributionService {
             throw new DuplicateMonthlyContributionException(contribution);
         }
 
-        // Set values
+        // No existing record — create a new PAID contribution
         contribution.setMember(member);
         contribution.setPaymentDate(
                 contribution.getPaymentDate() != null
